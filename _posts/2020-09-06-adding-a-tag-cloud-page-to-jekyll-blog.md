@@ -27,7 +27,7 @@ Hmm... you have created a jekyll based blog and moved / added content to it? You
 
 7. To link posts to this tags page, add tags to your post page. We do this by editing the template for the posts page (so that we don't need to add links in every post we do). Create a directory called `_layouts` in your `site` directory and a file called `post.md` in that with below content. This will serve as template for your posts page so feel free to customize it.
 	```markdown
-	---
+	{%raw%}---
 	layout: default
 	---
 
@@ -42,7 +42,12 @@ Hmm... you have created a jekyll based blog and moved / added content to it? You
 
 	<br/><br/><br/>
 
-	{{ content }}
+	{{ content }}{%endraw%}
 	```
 
 8. You are done. For a demo, click on the above listed tags of this page.
+
+
+<br/>
+### Credits
+Thanks to `Ozzie Liu` for a [nice blog](https://ozzieliu.com/2016/04/26/writing-liquid-template-in-markdown-with-jekyll) on escaping the liquid processing in a jekyll page
