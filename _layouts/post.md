@@ -17,5 +17,9 @@ layout: default
 
 <br/>
 <br/>
+
+<center>
+{% include share-buttons.html %}
+</center>
 <hr/>
 {%include comments.html %}
