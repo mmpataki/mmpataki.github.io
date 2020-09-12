@@ -1,6 +1,6 @@
 ---
-title: Tags
-permalink: /tags/
+title: Archive
+permalink: /archive/
 ---
 
 <style>
@@ -16,7 +16,7 @@ permalink: /tags/
 
 <div id="selectedtags"></div>
 <br/>
-<ul id="selectedurls"></ul>
+<ol style="list-style-type: none;" id="selectedurls"></ol>
 
 <script>
   var tags = {
@@ -33,7 +33,8 @@ permalink: /tags/
               {% assign firstPage = false %}
               {
                 url: "{{post.url}}",
-                title: "{{post.title}}"
+                title: "{{post.title}}",
+                pdate: "{{post.date}}"
               }
             {% endfor %}
           ]
@@ -100,7 +101,23 @@ permalink: /tags/
       }
     }
 
-    urls.forEach(u => selectedurls.innerHTML += `<li><a href="${u.url}">${u.title}</a></li>`)
+    let groups = {}, lastDate = "";
+    [...urls].sort((u1, u2) => Date.parse(u1.pdate) > Date.parse(u2.pdate)).forEach(u => {
+      if(lastDate != u.pdate) {
+        groups[lastDate = u.pdate] = []
+      }
+      groups[lastDate].push(u)
+    });
+
+    let html = "";
+    for(d in groups) {
+      html += `<li>${d}<ul style="list-style-type: none;">`
+      groups[d].forEach(p => {
+        html += `<li><a href="${p.url}">${p.title}</a></li>`
+      })
+      html += "<br/></ul></li>"
+    }
+    selectedurls.innerHTML = html
   }
 
   /* show tag cloud */

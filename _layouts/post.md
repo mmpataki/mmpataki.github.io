@@ -8,7 +8,7 @@ layout: default
 <br/>
 
 {% for tag in page.tags %}
-  <code><a href="/tags?id={{tag}}">{{ tag }}</a></code>
+  <code><a href="/archive?id={{tag}}">{{ tag }}</a></code>
 {% endfor %}
 
 <br/><br/><br/>
