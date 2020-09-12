@@ -1,0 +1,134 @@
+<html>
+
+<head>
+
+    <meta name="viewport"
+        content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+
+    <title>Honey hunt</title>
+
+    <script>
+
+        /* screen dimensions and cell dimension */
+        let W = 7, H = 10, cw = 40;
+        let SUTIME = 300;
+
+        let T = [];
+        let tj = 0;
+        let score = 0;
+
+        /* icons */
+        let EMPTY = 0, BEE = 1, HONEY = 2, CRASH = 3, TUB = 4;
+        let icons = ["sky.svg", "bee.svg", "honey.svg", "crash.svg", "tub.svg"]
+
+        for (let i = 0; i < H; i++) {
+            T.push([]);
+            for (let j = 0; j < W; j++) {
+                T[i].push(document.createElement('TD'));
+                si(T[i][j], EMPTY);
+            }
+        }
+
+        tj = 0;
+        si(T[0][tj], TUB)
+
+        function gi(x) {
+            return +x.getAttribute("ival");
+        }
+
+        function si(x, v) {
+            x.setAttribute("ival", v);
+            draw(x, v);
+        }
+
+        function moveDownItems() {
+            let crashWait;
+            for (let i = 0; i < T.length; i++) {
+                for (let j = 0; j < T[i].length; j++) {
+                    let crash = false;
+                    if (i == 0) {
+                        if (gi(T[i][j]) == TUB || gi(T[i][j]) == CRASH) {
+                            if (gi(T[i + 1][j]) == BEE) {
+                                score--;
+                                crashWait = crash = true;
+                            } else if (gi(T[i + 1][j]) == HONEY) {
+                                score++;
+                            }
+                        }
+                    }
+                    let val = 0;
+                    if (crash) {
+                        val = CRASH;
+                    } else if (i + 1 != T.length) {
+                        val = gi(T[i + 1][j]);
+                    }
+                    si(T[i][j], val);
+                }
+                if (i + 1 == T.length) {
+                    let col = Math.ceil(Math.random() * W - 1);
+                    let val = Math.round(Math.random() * 2);
+                    si(T[i][col], val);
+                }
+            }
+            if (!crashWait) {
+                si(T[0][tj], TUB)
+            }
+        }
+
+        function draw(t, val) {
+            t.innerHTML = `<img style="width: ${cw}px; height: ${cw}px" src="${icons[val]}"/>`;
+        }
+
+        function refreshUI() {
+            moveDownItems();
+            document.getElementById("score").innerText = score;
+            setTimeout(refreshUI, SUTIME);
+        }
+
+        function moveTub(e) {
+            let ntj = tj + (38 - e.keyCode);
+            if ((e.keyCode != 39 && e.keyCode != 37) || ntj >= W || ntj < 0)
+                return;
+            si(T[0][tj], EMPTY);
+            tj = ntj;
+            si(T[0][tj], TUB);
+        }
+
+        function handleTap(e) {
+            moveTub({ keyCode: (e.clientX < (screen.width / 2)) ? 37 : 39 })
+        }
+
+        window.onload = function () {
+            document.body.onkeydown = moveTub;
+            let tab = document.getElementById("output");
+            for (let i = 0; i < T.length; i++) {
+                let tr = document.createElement("tr");
+                tab.appendChild(tr);
+                for (let j = 0; j < T[i].length; j++) {
+                    tr.appendChild(T[T.length - i - 1][T[0].length - 1 - j]);
+                }
+            }
+            refreshUI();
+        }
+    </script>
+</head>
+
+<body onclick="handleTap(event)">
+    <center>
+        <h1>Honey hunt</h1>
+        <table id="output" style="background-color: skyblue"></table>
+        <span>score</span>
+        <br />
+        <span style="font-size: 36" id="score"></span>
+        <br /><br /><br />
+        <b>Made with &#10084; by Madhusoodan</b>
+        <br />
+        <i>Icon credits: <a href="https://www.flaticon.com/authors/roundicons" title="Roundicons">Roundicons</a> 
+            <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> 
+            <a href="https://www.flaticon.com/authors/pixel-perfect" title="Pixel perfect">Pixel perfect</a> 
+            <a href="https://www.flaticon.com/authors/iconixar" title="iconixar">iconixar</a>
+        </i>
+    </center>
+</body>
+
+</html>
