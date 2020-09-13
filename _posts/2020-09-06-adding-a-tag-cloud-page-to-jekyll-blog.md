@@ -23,7 +23,7 @@ Hmm... you have created a jekyll based blog and moved / added content to it? You
 
 5. To supply these tags metadata to javascript, we will generate a JSON database in the same page using the liquid templating.
 
-6. Create a page called tags.md in the root directory of the site and paste the content you find [here](https://raw.githubusercontent.com/mmpataki/mmpataki.github.io/master/archive.md)
+6. Create a page called tags.md in the root directory of the site and paste the content you find [here](https://raw.githubusercontent.com/mmpataki/mmpataki.github.io/master/tags.md)
 
 7. To link posts to this tags page, add tags to your post page. We do this by editing the template for the posts page (so that we don't need to add links in every post we do). Create a directory called `_layouts` in your `site` directory and a file called `post.md` in that with below content. This will serve as template for your posts page so feel free to customize it.
 	```markdown

@@ -7,6 +7,10 @@ permalink: /archive/
   code {
     cursor: pointer;
   }
+  .date {
+    color: gray;
+    font-size: 0.9em;
+  }
 </style>
 
 <div id="tagcloud">
@@ -68,56 +72,64 @@ permalink: /archive/
     renderTags();
   }
 
+  function getBlogPeriod(d) {
+    const monthNames = ["January", "February", "March", "April", "May", "June",
+      "July", "August", "September", "October", "November", "December"];
+    d = new Date(Date.parse(d.split(" ")[0]));
+    return `${monthNames[d.getMonth()]}, ${d.getFullYear()}`
+  }
+
   function showUrls() {
 
     let selTags = [];
     let urls = new Set();
+
+    /* if no tag is selected, we should show all of them */
+    let tmp = {};
+    for(tagName in tags) {
+      tags[tagName].pages.forEach(page => tmp[page.url] = page)
+    }
+    Object.values(tmp).forEach(p => urls.add(p))
 
     var selectedtags = document.getElementById("selectedtags");
     selectedtags.innerHTML = "";
     var selectedurls = document.getElementById("selectedurls");
     selectedurls.innerHTML = "";
 
-    var firstTag = true;
     for(tagName in tags) {
       var tag = tags[tagName]
       if(tag.selected) {
         selectedtags.innerHTML += `<code style="background-color: lightgreen">${tagName}</code>`;
-        if(firstTag) {
-          for (i in tag.pages) 
-            urls.add(tag.pages[i])
-          firstTag = false;
-        } else {
-          urls = new Set(tag.pages.filter(
-            function (u) {
-              var ua = [...urls];
-              for(ou in ua) {
-                if(ua[ou].url == u.url)
-                  return true;
-              }
+        urls = new Set(tag.pages.filter(
+          function (u) {
+            var ua = [...urls];
+            for(ou in ua) {
+              if(ua[ou].url == u.url)
+                return true;
             }
-          ));
+          }
+        ));
+      }
+    }
+
+    let html = "", lastDate = "";
+    [...urls]
+      .sort((u1, u2) => toDate(u1.pdate) < toDate(u2.pdate))
+      .forEach(u => {
+        console.log(toDate(u.pdate))
+        if(getBlogPeriod(lastDate) != getBlogPeriod(u.pdate)) {
+          html += `${lastDate == "" ? "" : "<br/></ul>"}<li><i class="date">${getBlogPeriod(u.pdate)}</i><ul style="list-style-type: none;">`
         }
+        html += `<li><a href="${u.url}">${u.title}</a></li>`
+        lastDate = u.pdate
       }
-    }
+    );
 
-    let groups = {}, lastDate = "";
-    [...urls].sort((u1, u2) => Date.parse(u1.pdate) > Date.parse(u2.pdate)).forEach(u => {
-      if(lastDate != u.pdate) {
-        groups[lastDate = u.pdate] = []
-      }
-      groups[lastDate].push(u)
-    });
-
-    let html = "";
-    for(d in groups) {
-      html += `<li>${d}<ul style="list-style-type: none;">`
-      groups[d].forEach(p => {
-        html += `<li><a href="${p.url}">${p.title}</a></li>`
-      })
-      html += "<br/></ul></li>"
-    }
     selectedurls.innerHTML = html
+  }
+
+  function toDate(u) {
+    return new Date(Date.parse(`${u.split(" ")[0]} ${u.split(" ")[1]}`))
   }
 
   /* show tag cloud */
