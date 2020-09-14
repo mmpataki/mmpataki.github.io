@@ -85,7 +85,8 @@ layout: page
     </a>
     <div>
         <span class="postdate">{{post.date | slice: 0, 10}}</span>
-        <span class="readtime">&#9202;
+        <span class="readtime">
+            <svg id="i-clock" viewBox="0 0 32 32" width="11" height="11" fill="none" stroke="currentcolor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><circle cx="17" cy="17" r="14" /><path d="M16 8 L16 16 20 20" /></svg>
             {% assign words = post.content | number_of_words %}
             {% if words < 360 %}
             1 min read
