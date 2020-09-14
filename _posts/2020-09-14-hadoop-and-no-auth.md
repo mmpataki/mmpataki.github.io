@@ -65,8 +65,9 @@ As we were working remotely, I was supposed to ask him the credentials of a Hado
     ...
     ```
 
+
 ## Conclusion
 1. If you have a insecure cluster, it's open for attacks. Attackers can login as any user by
     1. Logging in as the required user in their machine and connecting to your cluster.
     2. Setting the `HADOOP_USER` environment variable to whatever value they want to (`hdfs`, `yarn` which are superusers)
-2. I have even seen the Hadoop clusters on Cloud attacked to mine bitcoins
+2. I have even seen the Hadoop clusters on Cloud attacked to mine bitcoins, so securing the clusters with authentication mechanisms such as `kerberos` can help securing your resources (memory and cpu)
