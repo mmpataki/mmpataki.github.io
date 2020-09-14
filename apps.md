@@ -3,6 +3,8 @@ title: Apps
 permalink: /apps/
 ---
 
+{% include ga.html %}
+
 This page has few games which are used in tutorials I have built. Feel free to play them :smile:
 
 

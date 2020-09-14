@@ -3,6 +3,8 @@ title: Archive
 permalink: /archive/
 ---
 
+{% include ga.html %}
+
 <style>
   code {
     cursor: pointer;

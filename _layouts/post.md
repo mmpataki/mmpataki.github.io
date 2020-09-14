@@ -2,6 +2,8 @@
 layout: default
 ---
 
+{% include ga.html %}
+
 <h1> {{ page.title }} </h1>
 <i>{{ page.date | date: '%B %d, %Y' }}</i>
 
