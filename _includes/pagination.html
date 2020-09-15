@@ -1,0 +1,86 @@
+<style>
+    .pagination a,
+    .pagination span {
+        padding: 7px 18px;
+        border: 1px solid #eee;
+        margin-left: -2px;
+        margin-right: -2px;
+        background-color: #ffffff;
+        display: inline-block;
+    }
+
+    .pagination:hover a:hover {
+        background-color: #f1f1f1;
+        color: #333;
+    }
+
+    .pagination {
+        text-align: center;
+    }
+
+    .posthead {
+        font-size: 1.5em;
+    }
+
+    .postdate {
+        margin-left: 5px;
+        margin-right: 5px;
+        float: right;
+        vertical-align: bottom;
+        font-size: 0.9em;
+        color: gray;
+    }
+
+    .smallcode {
+        font-size: 0.9em;
+    }
+</style>
+
+<h4>Posts</h4>
+
+{% for post in paginator.posts %}
+<div>
+    <a href="{{post.url | prepend: site.baseurl}}">
+        <span class="posthead">{{post.title}}</span>
+    </a>
+    <div>
+        <span class="postdate">{{post.date | slice: 0, 10}}</span>
+        {% for tag in post.tags %}
+        <code class="smallcode"><a href="/archive?id={{tag}}">{{tag}}</a></code> 
+        {% endfor %}
+    </div>
+</div>
+{{ post.content | strip_html | slice: 0, 250 }}...
+<br />
+<br />
+{% endfor %}
+
+<br/>
+
+<!-- pagination -->
+{% if paginator.total_pages > 1 %}
+<div class="pagination">
+    {% if paginator.previous_page %}
+    <a href="{{ paginator.previous_page_path | prepend: site.baseurl | replace: '//', '/' }}">&laquo; Prev</a>
+    {% else %}
+    <span>&laquo; Prev</span>
+    {% endif %}
+
+    {% for page in (1..paginator.total_pages) %}
+    {% if page == paginator.page %}
+    <span>{{ page }}</span>
+    {% elsif page == 1 %}
+    <a href="/">{{ page }}</a>
+    {% else %}
+    <a
+        href="{{ site.paginate_path | prepend: site.baseurl | replace: '//', '/' | replace: ':num', page }}">{{ page }}</a>
+    {% endif %}
+    {% endfor %}
+
+    {% if paginator.next_page %}
+    <a href="{{ paginator.next_page_path | prepend: site.baseurl | replace: '//', '/' }}">Next &raquo;</a>
+    {% else %}
+    <span>Next &raquo;</span>
+    {% endif %}
+</div>
+{% endif %}
