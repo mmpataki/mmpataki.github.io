@@ -1,0 +1,16 @@
+.trans-sanskrit {
+    border-left: solid 6px orange;
+    background-color: #fdfdfd;
+    font-size: 1.1em;
+}
+
+.source-switch {
+    float: right;
+    cursor: pointer;
+    font-size: 0.7em;
+    top: 0;
+    padding: 0px 4px;
+    margin: -10px;
+    background-color: brown;
+    color: white;
+}
