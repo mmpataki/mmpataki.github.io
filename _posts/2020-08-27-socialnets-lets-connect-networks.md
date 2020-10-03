@@ -1,5 +1,6 @@
 ---
 tags: socialnetworks facebook vpn hack
+category: Programming
 ---
 Have you ever found yourself in a situation where you can't connect to your company VPN and want to do some quick tests on hosts lying inside the VPN? Or want to connect to machines in VPN via your mobile phone while travelling?
 

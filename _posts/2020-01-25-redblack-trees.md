@@ -1,5 +1,6 @@
 ---
 tags: red-black-tree rb-trees data-structures
+category: Programming
 ---
 This post is not an another article which describes RB Trees. This one tries to explain the need for node coloring constraints described in the RB Tree design.  
   

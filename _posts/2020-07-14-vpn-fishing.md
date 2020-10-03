@@ -1,5 +1,6 @@
 ---
 tags: vpn phishing hack
+category: Programming
 ---
 
 Recently I encountered an interesting scenario where a link I clicked on a link in an email local to our VPN opened a public website. Link was similar to  

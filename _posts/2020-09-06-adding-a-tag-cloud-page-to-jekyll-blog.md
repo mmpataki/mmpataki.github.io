@@ -1,6 +1,7 @@
 ---
 title: Adding a tag cloud page to jekyll blog
 tags: blogging hack jekyll javascript
+category: Programming
 ---
 
 Hmm... you have created a jekyll based blog and moved / added content to it? You notice there is no tags page in the default theme like in Blogger? Here is a simple solution to add them

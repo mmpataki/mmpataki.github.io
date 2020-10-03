@@ -1,6 +1,7 @@
 ---
 title: Hadoop and no auth?
 tags: hadoop hack hdfs yarn security authentication
+category: Programming
 ---
 
 Have you setup a hadoop cluster and enabled no authentication for it (kerberos)? You definitely need to read this.
