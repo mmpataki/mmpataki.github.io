@@ -83,13 +83,13 @@ All that is fine, mistakes are possible. But how will we catch them (the cause) 
 `Asan` is address sanitizer which adds a few more instructions to your code to do sanity checks to detect such stack corruptions (possibly it can do more, which I haven't explored much) and can be used as follows
 
 ```bash
-g++ -fsanitize=address sol.cpp -o sol -g
+[mmp@mpataki insertionsort]$ g++ -fsanitize=address sol.cpp -o sol -g
 ```
 
 You have to install the `libasan` first
 ```bash
 # Fedora / RHEL
-$ sudo yum install libasan
+[mmp@mpataki insertionsort]$ sudo yum install libasan
 ```
 
 Now when I run it (Note it clearly points out the line number 11)
@@ -146,7 +146,7 @@ Let's see some disassembly and see what code did the `asan` add.
 
 ### Without sanitizer
 ```
-$ objdump -D ./sol
+[mmp@mpataki insertionsort]$ objdump -D ./sol
 ...
 0000000000401166 <_Z5isortiPi>:
   401166:	55                   	push   %rbp
@@ -214,7 +214,7 @@ $ objdump -D ./sol
 
 ### With sanitizer
 ```assembly
-$ objdump -D ./sol
+[mmp@mpataki insertionsort]$ objdump -D ./sol
 ...
 0000000000401216 <_Z5isortiPi>:
   401216:	55                   	push   %rbp
