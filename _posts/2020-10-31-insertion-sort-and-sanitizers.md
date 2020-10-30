@@ -6,7 +6,7 @@ category: Programming
 
 Title is misleading isn't it? What has sanitizers to do with insertion sort? 
 
-Well one fine day, I was trying to brush-up algoritms and implementation skills so I started with insertion sort. The implementation took around 2mins but the testing ruined around 15mins. This blog just records the problem.
+Well one fine day, I was trying to brush-up algorithms and implementation skills so I started with insertion sort. The implementation took around 2 mins but the testing ruined around 15 mins. This blog just records the problem.
 
 Here is where it all started.
 
@@ -50,7 +50,7 @@ Segmentation fault (core dumped)
 ```
 
 I thought I will run it with `gdb` to figure out the exception stack.
-```bash
+```
 [mmp@mpataki insertionsort]$ echo -e "r\nwhere" | gdb -q ./sol | head -n 20
 Reading symbols from ./sol...
 (gdb) Starting program: /home/mmp/cp/algo/c2/insertionsort/sol 
@@ -140,10 +140,14 @@ Shadow byte legend (one shadow byte represents 8 application bytes):
 ==447554==ABORTING
 ```
 
-Let's see some disassembly and note the sanitizer code.
+## What does `asan` do
 
-Before sanitize
+Let's see some disassembly and see what code did the `asan` add.
+
+### Without sanitizer
 ```
+$ objdump -D ./sol
+...
 0000000000401166 <_Z5isortiPi>:
   401166:	55                   	push   %rbp
   401167:	48 89 e5             	mov    %rsp,%rbp
@@ -205,10 +209,13 @@ Before sanitize
   401220:	90                   	nop
   401221:	5d                   	pop    %rbp
   401222:	c3                   	retq   
+  ...
 ```
 
-After sanitizer
-```
+### With sanitizer
+```assembly
+$ objdump -D ./sol
+...
 0000000000401216 <_Z5isortiPi>:
   401216:	55                   	push   %rbp
   401217:	48 89 e5             	mov    %rsp,%rbp
@@ -356,4 +363,5 @@ After sanitizer
   4013f8:	90                   	nop
   4013f9:	c9                   	leaveq 
   4013fa:	c3                   	retq   
+  ...
 ```
