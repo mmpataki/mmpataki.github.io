@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Whiteboard</title>
+    <style>
+        body {
+            width: 100%;
+            height: 100%;
+            margin: 0px;
+            padding: 0px;
+            overflow: hidden;
+        }
+
+        #controls {
+            position: absolute;
+            z-index: 200;
+            top: 0px;
+            background-color: white;
+            padding: 3px;
+        }
+
+        .control-left {
+            padding: 5px;
+            width: 100%;
+            font-size: 36px;
+            display: block;
+            line-height: 0.8;
+        }
+
+        .ctrl-icon:hover {
+            padding-left: 10px;
+        }
+    </style>
+    <script>
+
+        let canvas;
+        let ctx;
+
+        let controls = [
+            {
+                char: { left: "✏" },
+                img: {},
+                name: "pen",
+                colors: ["black", "red", "blue", "green", "orange", "brown"],
+                onclick: "penSelected"
+            },
+            {
+                char: { left: "▭" },
+                img: {},
+                name: "erasor",
+                colors: ["black"],
+                onclick: "erasorSelected"
+            },
+            {
+                char: { left: "⮌" },
+                img: {},
+                name: "undo",
+                colors: ["black"],
+                onclick: "undo"
+            },
+            {
+                char: { left: "⮎" },
+                img: {},
+                name: "redo",
+                colors: ["black"],
+                onclick: "redo"
+            },
+            {
+                char: { left: "&#9881;"},
+                img: {},
+                name: "settings",
+                colors: ["black"],
+                onclick: "settings"
+            }
+        ]
+
+        window.onload = function () {
+            buildCanvas();
+            resize();
+            renderControls();
+        }
+
+        window.onresize = function () {
+            resize();
+            renderControls();
+        }
+
+        let DC = {
+            pathStarted: false,
+            lineStack: [],
+            line: [],
+            redoStack: [],
+            controlsRendered: false,
+            separators : { left: "<br/>", top : "" },
+            penColor : "black"
+        }
+
+        let app = {
+            controlsposition: "left"
+        };
+
+        function renderControls() {
+            let controlsDiv = g("controls")
+            let html = "";
+            let position = app.controlsposition;
+            if(!DC.controlsRendered) {
+                controls.forEach(ctrl => {
+                    ctrl.colors.forEach(color => {
+                        if(ctrl.char != "") {
+                            html += `<span id="${ctrl.name}-${color}" class="control-${position}" style="color: ${color}" onclick="${ctrl.onclick}(this.id)">${ctrl.char[position]}</span>`;
+                        } else {
+                            html += `<img id="${ctrl.name}-${color}" class="control-${position}" src="${ctrl.img[position]}" onclick="${ctrl.onclick}(this.id)"/>`;
+                        }
+                    })
+                })
+                DC.controlsRendered = true
+                controlsDiv.innerHTML = html;
+            }
+            /* re-place it */
+            if(position == "top") {
+                controlsDiv.style.left = `${(window.innerWidth - controlsDiv.offsetWidth) / 2}px`;
+                controlsDiv.style.top = 0;
+            } else {
+                controlsDiv.style.top = `${(window.innerHeight - controlsDiv.offsetHeight) / 2}px`;
+                controlsDiv.style.left = 0;
+            }
+            
+        }
+
+        function buildCanvas() {
+            canvas = g("canvas");
+            ctx = canvas.getContext('2d');
+            canvas.addEventListener('mousemove', moved);
+            canvas.addEventListener('mousedown', mousedown)
+            canvas.addEventListener('mouseup', mouseup)
+        }
+
+        function mousedown(e) {
+            if (e.buttons && e.button == 0) {
+                DC.pathStarted = true;
+                ctx.beginPath();
+                ctx.moveTo(e.x, e.y);
+                DC.line = [[e.x, e.y]]
+                ctx.lineWidth = 10;
+            }
+        }
+
+        function mouseup(e) {
+            if (e.button == 0) {
+                DC.pathStarted = false;
+                DC.lineStack.push(DC.line)
+            }
+        }
+
+        function moved(e) {
+            if (e.buttons && e.button == 0) {
+                DC.line.push([e.x, e.y])
+                ctx.lineTo(e.x, e.y);
+                ctx.strokeStyle = DC.penColor;
+                ctx.stroke();
+            }
+        }
+
+        function g(x) {
+            return document.getElementById(x);
+        }
+
+        function resize() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height)
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            redraw();
+        }
+
+        function redraw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height)
+            DC.lineStack.forEach(x => drawLineSeg(x));
+        }
+
+        function drawLineSeg(ls) {
+            if(!ls) return;
+            ctx.beginPath();
+            ctx.moveTo(ls[0][0], ls[0][1])
+            ctx.lineWidth = 10;
+            ls.forEach(pt => ctx.lineTo(pt[0], pt[1]))
+            ctx.stroke();
+        }
+
+        function undo() {
+            let x = DC.lineStack.pop();
+            if (x) {
+                DC.redoStack.push(x)
+                redraw();
+            }
+        }
+
+        function redo() {
+            let x = DC.redoStack.pop();
+            if (x) {
+                DC.lineStack.push(x);
+                drawLineSeg(x)
+            }
+        }
+
+        function penSelected(id) {
+            DC.penColor = id.split("-")[1];
+        }   
+        
+        function erasorSelected() {
+            
+        }
+
+        function settings() {
+            
+        }
+    </script>
+</head>
+
+<body>
+    <canvas id="canvas">
+    </canvas>
+    <div id="controls">
+    </div>
+</body>
+
+</html>
