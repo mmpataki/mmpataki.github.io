@@ -45,11 +45,11 @@
         }
 
         .revesrsed {
-            -webkit-transform:rotateY(180deg);
-            -moz-transform:rotateY(180deg);
-            -o-transform:rotateY(180deg);
-            transform:rotateY(180deg);
-            -ms-transform:rotateY(180deg);
+            -webkit-transform: rotateY(180deg);
+            -moz-transform: rotateY(180deg);
+            -o-transform: rotateY(180deg);
+            transform: rotateY(180deg);
+            -ms-transform: rotateY(180deg);
         }
     </style>
     <script>
@@ -119,7 +119,7 @@
             penSize: 5,
             lastDrawSpeed: undefined,
             erasorSize: 5,
-            pathNum : 0
+            pathNum: 0
         }
 
         let app = {
@@ -160,6 +160,32 @@
             canvas.addEventListener('mousemove', moved);
             canvas.addEventListener('mousedown', mousedown)
             canvas.addEventListener('mouseup', mouseup)
+
+            canvas.addEventListener('touchmove', touchmoved)
+            canvas.addEventListener('touchstart', touchdown)
+            canvas.addEventListener('touchup', touchup)
+        }
+
+        function touchdown(e) {
+            let touch = e.changedTouches[0];
+            DC.curTouch = touch.identifier;
+            pointerDown({ x: touch.pageX, y: touch.pageY })
+        }
+
+        function touchup(e) {
+            for (let i = 0; i < e.changedTouches.length; i++) {
+                t = e.changedTouches[0];
+                if (t.identifier == DC.curTouch)
+                    pointerUp();
+            }
+        }
+
+        function touchmoved(e) {
+            for (let i = 0; i < e.changedTouches.length; i++) {
+                t = e.changedTouches[0];
+                if (t.identifier == DC.curTouch)
+                    pointerMoved({ x: t.pageX, y: t.pageY });
+            }
         }
 
         function newLine(color, size, points) {
@@ -168,19 +194,27 @@
 
         function mousedown(e) {
             if (e.buttons && e.button == 0) {
-                DC.pathStarted = true;
-                ctx.beginPath();
-                ctx.moveTo(e.x, e.y);
-                DC.pathNum++;
-                DC.line = newLine(DC.penColor, DC.penSize, [[e.x, e.y]])
+                pointerDown({ x: e.x, y: e.y })
             }
+        }
+
+        function pointerDown(e) {
+            DC.pathStarted = true;
+            ctx.beginPath();
+            ctx.moveTo(e.x, e.y);
+            DC.pathNum++;
+            DC.line = newLine(DC.penColor, DC.penSize, [[e.x, e.y]])
         }
 
         function mouseup(e) {
             if (e.button == 0) {
-                DC.pathStarted = false;
-                DC.lineStack.push(DC.line)
+                pointerUp({});
             }
+        }
+
+        function pointerUp(e) {
+            DC.pathStarted = false;
+            DC.lineStack.push(DC.line)
         }
 
         function pointDist(p1, p2) {
@@ -188,25 +222,25 @@
         }
 
         let cursors = {
-            "erasor" : [
-                "url('http://localhost:4000/cursor-small.png'), auto", 
+            "erasor": [
+                "url('http://localhost:4000/cursor-small.png'), auto",
                 "url('http://localhost:4000/cursor-medium.png'), auto",
                 "url('http://localhost:4000/cursor-large.png'), auto"
             ],
-            "pen" : ["auto"]
+            "pen": ["auto"]
         }
         function setCursor(sz) {
             let c = cursors[DC.mode][Math.floor(sz / 30)];
-            if(!c) {
+            if (!c) {
                 c = cursors[DC.mode][cursors.length - 1];
             }
             return canvas.style.cursor = c;
         }
 
         function computeLineWidth(p) {
-            if(DC.mode == "erasor") {
+            if (DC.mode == "erasor") {
                 let drawSpeed = pointDist(DC.line.points[DC.line.points.length - 1], p) / 5;
-                if(DC.lastDrawSpeed) {
+                if (DC.lastDrawSpeed) {
                     DC.erasorSize = Math.max(5, (drawSpeed - DC.lastDrawSpeed) + DC.erasorSize)
                     setCursor(DC.erasorSize);
                 }
@@ -220,18 +254,22 @@
 
         function moved(e) {
             if (e.buttons && e.button == 0) {
-                ctx.lineWidth = computeLineWidth([e.x, e.y])
-                DC.line.points.push([e.x, e.y]);
-                ctx.strokeStyle = DC.penColor;
+                pointerMoved({ x: e.x, y: e.y })
+            }
+        }
 
-                ctx.lineTo(e.x, e.y);
-                ctx.stroke();
-                if(DC.mode == "erasor") {
-                    ctx.beginPath();
-                    ctx.moveTo(e.x, e.y);
-                    DC.lineStack.push(DC.line);
-                    DC.line = newLine(DC.penColor, ctx.lineWidth, [[e.x, e.y]])
-                }
+        function pointerMoved(e) {
+            ctx.lineWidth = computeLineWidth([e.x, e.y])
+            DC.line.points.push([e.x, e.y]);
+            ctx.strokeStyle = DC.penColor;
+
+            ctx.lineTo(e.x, e.y);
+            ctx.stroke();
+            if (DC.mode == "erasor") {
+                ctx.beginPath();
+                ctx.moveTo(e.x, e.y);
+                DC.lineStack.push(DC.line);
+                DC.line = newLine(DC.penColor, ctx.lineWidth, [[e.x, e.y]])
             }
         }
 
@@ -268,8 +306,8 @@
                 do {
                     DC.redoStack.push(x)
                     x = DC.lineStack.pop();
-                } while(x && x.pathid == pid);
-                if(x) {
+                } while (x && x.pathid == pid);
+                if (x) {
                     DC.lineStack.push(x)
                 }
                 redraw();
@@ -284,8 +322,8 @@
                     DC.lineStack.push(x);
                     drawLineSeg(x)
                     x = DC.redoStack.pop();
-                } while(x && x.pathid == pid);
-                if(x) {
+                } while (x && x.pathid == pid);
+                if (x) {
                     DC.redoStack.push(x)
                 }
             }
