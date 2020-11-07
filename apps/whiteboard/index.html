@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <title>Whiteboard</title>
+    <style>
+        body {
+            width: 100%;
+            height: 100%;
+            margin: 0px;
+            padding: 0px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        * {
+            overscroll-behavior: none;
+        }
+
+        #controls {
+            position: absolute;
+            z-index: 200;
+            top: 0px;
+            padding: 0px;
+            border-radius: 0px 5px 5px 0px;
+        }
+
+        .control-left {
+            padding: 5px;
+            padding-left: 0px;
+            width: 45px;
+            font-size: 36px;
+            display: block;
+            line-height: 0.8;
+        }
+
+        .control-top {
+            height: 35px;
+            padding: 0px 5px;
+            font-size: 36px;
+        }
+
+        .control-icon {
+            -moz-user-select: none;
+            -khtml-user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+            cursor: pointer;
+        }
+
+        .ctrl-icon:hover {
+            padding-left: 10px;
+        }
+
+        .revesrsed {
+            -webkit-transform: rotateY(180deg);
+            -moz-transform: rotateY(180deg);
+            -o-transform: rotateY(180deg);
+            transform: rotateY(180deg);
+            -ms-transform: rotateY(180deg);
+        }
+    </style>
+    <script>
+
+        let canvas;
+        let ctx;
+
+        let controls = [
+            {
+                char: {},
+                img: {},
+                name: "pen",
+                colors: ["black", "red", "blue", "green", "orange", "brown"],
+                onclick: "penSelected"
+            },
+            {
+                char: {},
+                img: {},
+                name: "erasor",
+                colors: ["black"],
+                onclick: "erasorSelected",
+                class: "char-"
+            },
+            {
+                char: { left: "⮌", top: "⮌" },
+                img: {},
+                name: "undo",
+                colors: ["black"],
+                onclick: "undo"
+            },
+            {
+                char: { left: "⮎", top: "⮎" },
+                img: {},
+                name: "redo",
+                colors: ["black"],
+                onclick: "redo"
+            },
+            {
+                char: { left: "&#9881;", top: "&#9881;" },
+                img: {},
+                name: "settings",
+                colors: ["black"],
+                onclick: "settings"
+            },
+            {
+                char : { left : "&#11016;", top: "&#11019;"},
+                img: {},
+                name: "toolbar-pos",
+                colors: ["black"],
+                onclick: "moveToolBar"
+            }
+        ]
+
+        window.onload = function () {
+            buildCanvas();
+            resize();
+            renderControls();
+        }
+
+        window.onresize = function () {
+            resize();
+            renderControls();
+        }
+
+        let DC = {
+            pathStarted: false,
+            lineStack: [],
+            line: [],
+            redoStack: [],
+            controlsRendered: false,
+            separators: { left: "<br/>", top: "" },
+            penColor: "black",
+            backgroundColor: "white",
+            penSize: 5,
+            lastDrawSpeed: undefined,
+            erasorSize: 5,
+            pathNum: 0,
+            lastSelectedItemId: undefined,
+            penLength : "35px",
+            penExtendedLength : "45px",
+            penWidth : "45px",
+            penExtendedWidth : "55px"
+        }
+
+        let app = {
+            controlsposition: "left"
+        };
+
+        function moveToolBar() {
+            DC.controlsRendered = false;
+            app.controlsposition = app.controlsposition == "left" ? "top" : "left"
+            renderControls();
+        }
+
+        function renderControls() {
+            let controlsDiv = g("controls")
+            let html = "";
+            let position = app.controlsposition;
+            if (!DC.controlsRendered) {
+                controls.forEach(ctrl => {
+                    ctrl.colors.forEach(color => {
+                        if (ctrl.char[position]) {
+                            html += `<span id="${ctrl.name}-${color}" class="control-icon control-${position} ${ctrl.class}" style="color: ${color}" onclick="itemSelected(this.id); ${ctrl.onclick}(this.id, this)">${ctrl.char[position]}</span>`;
+                        } else {
+                            html += `<img id="${ctrl.name}-${color}" class="control-${position}" src="${ctrl.name}-${position}-${color}.png" onclick="itemSelected(this.id); ${ctrl.onclick}(this.id, this)"/>`;
+                        }
+                    })
+                })
+                DC.controlsRendered = true
+                controlsDiv.innerHTML = html;
+            }
+            /* re-place it */
+            if (position == "top") {
+                controlsDiv.style.left = `${(window.innerWidth - controlsDiv.offsetWidth) / 2}px`;
+                controlsDiv.style.top = 0;
+            } else {
+                controlsDiv.style.top = `${(window.innerHeight - controlsDiv.offsetHeight) / 2}px`;
+                controlsDiv.style.left = 0;
+            }
+        }
+
+        function itemSelected(itemId) {
+            if(app.controlsposition == "left") {
+                g(itemId).style.width = DC.penExtendedWidth;
+                if(DC.lastSelectedItemId) {
+                    g(DC.lastSelectedItemId).style.width = DC.penWidth;
+                }
+            } else {
+                g(itemId).style.height = DC.penExtendedLength;
+                if(DC.lastSelectedItemId) {
+                    g(DC.lastSelectedItemId).style.height = DC.penLength;
+                }
+            }
+            DC.lastSelectedItemId = itemId;
+        }
+
+        function buildCanvas() {
+            canvas = g("canvas");
+            ctx = canvas.getContext('2d');
+            canvas.addEventListener('mousemove', moved);
+            canvas.addEventListener('mousedown', mousedown)
+            canvas.addEventListener('mouseup', mouseup)
+
+            canvas.addEventListener('touchmove', touchmoved, false)
+            canvas.addEventListener('touchstart', touchdown)
+            canvas.addEventListener('touchup', touchup)
+        }
+
+        function touchdown(e) {
+            let touch = e.changedTouches[0];
+            DC.curTouch = touch.identifier;
+            pointerDown({ x: touch.pageX, y: touch.pageY })
+        }
+
+        function touchup(e) {
+            for (let i = 0; i < e.changedTouches.length; i++) {
+                t = e.changedTouches[0];
+                if (t.identifier == DC.curTouch)
+                    pointerUp();
+            }
+        }
+
+        function touchmoved(e) {
+            e.preventDefault();
+            for (let i = 0; i < e.changedTouches.length; i++) {
+                t = e.changedTouches[0];
+                if (t.identifier == DC.curTouch)
+                    pointerMoved({ x: t.pageX, y: t.pageY });
+            }
+        }
+
+        function newLine(color, size, points) {
+            return { color: color, penSize: size, points: points, pathid: DC.pathNum }
+        }
+
+        function mousedown(e) {
+            if (e.buttons && e.button == 0) {
+                pointerDown({ x: e.x, y: e.y })
+            }
+        }
+
+        function pointerDown(e) {
+            DC.pathStarted = true;
+            ctx.beginPath();
+            ctx.moveTo(e.x, e.y);
+            DC.pathNum++;
+            DC.line = newLine(DC.penColor, DC.penSize, [[e.x, e.y]])
+        }
+
+        function mouseup(e) {
+            if (e.button == 0) {
+                pointerUp({});
+            }
+        }
+
+        function pointerUp(e) {
+            DC.pathStarted = false;
+            DC.lineStack.push(DC.line)
+        }
+
+        function pointDist(p1, p2) {
+            return Math.sqrt(Math.pow(p1[0] - p2[0], 2) + Math.pow(p1[1] - p2[1], 2))
+        }
+
+        let cursors = {
+            "erasor": [
+                "url('http://localhost:4000/cursor-small.png'), auto",
+                "url('http://localhost:4000/cursor-medium.png'), auto",
+                "url('http://localhost:4000/cursor-large.png'), auto"
+            ],
+            "pen": ["auto"]
+        }
+        function setCursor(sz) {
+            let c = cursors[DC.mode][Math.floor(sz / 30)];
+            if (!c) {
+                c = cursors[DC.mode][cursors.length - 1];
+            }
+            return canvas.style.cursor = c;
+        }
+
+        function computeLineWidth(p) {
+            if (DC.mode == "erasor") {
+                let drawSpeed = pointDist(DC.line.points[DC.line.points.length - 1], p) / 5;
+                if (DC.lastDrawSpeed) {
+                    DC.erasorSize = Math.max(5, (drawSpeed - DC.lastDrawSpeed) + DC.erasorSize)
+                    setCursor(DC.erasorSize);
+                }
+                DC.lastDrawSpeed = drawSpeed;
+                console.log(DC.erasorSize)
+                return DC.erasorSize;
+            } else {
+                return DC.penSize;
+            }
+        }
+
+        function moved(e) {
+            if (e.buttons && e.button == 0) {
+                pointerMoved({ x: e.x, y: e.y })
+            }
+        }
+
+        function pointerMoved(e) {
+            ctx.lineWidth = computeLineWidth([e.x, e.y])
+            DC.line.points.push([e.x, e.y]);
+            ctx.strokeStyle = DC.penColor;
+
+            ctx.lineTo(e.x, e.y);
+            ctx.stroke();
+            if (DC.mode == "erasor") {
+                ctx.beginPath();
+                ctx.moveTo(e.x, e.y);
+                DC.lineStack.push(DC.line);
+                DC.line = newLine(DC.penColor, ctx.lineWidth, [[e.x, e.y]])
+            }
+        }
+
+        function g(x) {
+            return document.getElementById(x);
+        }
+
+        function resize() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height)
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            redraw();
+        }
+
+        function redraw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height)
+            DC.lineStack.forEach(x => drawLineSeg(x));
+        }
+
+        function drawLineSeg(ls) {
+            if (!ls) return;
+            ctx.beginPath();
+            ctx.moveTo(ls.points[0][0], ls.points[0][1])
+            ctx.lineWidth = ls.penSize;
+            ls.points.forEach(pt => ctx.lineTo(pt[0], pt[1]))
+            ctx.strokeStyle = ls.color;
+            ctx.stroke();
+        }
+
+        function undo() {
+            let x = DC.lineStack.pop();
+            if (x) {
+                let pid = x.pathid;
+                do {
+                    DC.redoStack.push(x)
+                    x = DC.lineStack.pop();
+                } while (x && x.pathid == pid);
+                if (x) {
+                    DC.lineStack.push(x)
+                }
+                redraw();
+            }
+        }
+
+        function redo() {
+            let x = DC.redoStack.pop();
+            if (x) {
+                let pid = x.pathid;
+                do {
+                    DC.lineStack.push(x);
+                    drawLineSeg(x)
+                    x = DC.redoStack.pop();
+                } while (x && x.pathid == pid);
+                if (x) {
+                    DC.redoStack.push(x)
+                }
+            }
+        }
+
+        function penSelected(id) {
+            DC.penColor = id.split("-")[1];
+            DC.mode = "pen";
+            setCursor(DC.erasorSize);
+        }
+
+        function erasorSelected() {
+            DC.mode = "erasor";
+            DC.penColor = DC.backgroundColor;
+            setCursor(DC.erasorSize);
+        }
+
+        function settings() {
+
+        }
+    </script>
+</head>
+
+<body>
+    <canvas id="canvas">
+    </canvas>
+    <div id="controls">
+    </div>
+</body>
+
+</html>

@@ -15,3 +15,6 @@ A simple hadoop *-site.xml comparator.
 
 # [url-codec](urlcodec)
 A simple single player game to demonstrate the capabilities of Javascript and HTML.
+
+# [whiteboard](whiteboard)
+A simple WYSIWYG whiteboard app (still in development)
