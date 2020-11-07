@@ -23,17 +23,23 @@
             position: absolute;
             z-index: 200;
             top: 0px;
-            background-color: rgb(239, 251, 255);
-            padding: 3px;
+            padding: 0px;
             border-radius: 0px 5px 5px 0px;
         }
 
         .control-left {
             padding: 5px;
-            width: 100%;
+            padding-left: 0px;
+            width: 45px;
             font-size: 36px;
             display: block;
             line-height: 0.8;
+        }
+
+        .control-top {
+            height: 35px;
+            padding: 0px 5px;
+            font-size: 36px;
         }
 
         .control-icon {
@@ -64,40 +70,47 @@
 
         let controls = [
             {
-                char: { left: "✏" },
+                char: {},
                 img: {},
                 name: "pen",
                 colors: ["black", "red", "blue", "green", "orange", "brown"],
                 onclick: "penSelected"
             },
             {
-                char: { left: "✏" },
+                char: {},
                 img: {},
                 name: "erasor",
-                colors: ["gray"],
+                colors: ["black"],
                 onclick: "erasorSelected",
-                class: "reversed"
+                class: "char-"
             },
             {
-                char: { left: "⮌" },
+                char: { left: "⮌", top: "⮌" },
                 img: {},
                 name: "undo",
                 colors: ["black"],
                 onclick: "undo"
             },
             {
-                char: { left: "⮎" },
+                char: { left: "⮎", top: "⮎" },
                 img: {},
                 name: "redo",
                 colors: ["black"],
                 onclick: "redo"
             },
             {
-                char: { left: "&#9881;" },
+                char: { left: "&#9881;", top: "&#9881;" },
                 img: {},
                 name: "settings",
                 colors: ["black"],
                 onclick: "settings"
+            },
+            {
+                char : { left : "&#11016;", top: "&#11019;"},
+                img: {},
+                name: "toolbar-pos",
+                colors: ["black"],
+                onclick: "moveToolBar"
             }
         ]
 
@@ -124,12 +137,23 @@
             penSize: 5,
             lastDrawSpeed: undefined,
             erasorSize: 5,
-            pathNum: 0
+            pathNum: 0,
+            lastSelectedItemId: undefined,
+            penLength : "35px",
+            penExtendedLength : "45px",
+            penWidth : "45px",
+            penExtendedWidth : "55px"
         }
 
         let app = {
             controlsposition: "left"
         };
+
+        function moveToolBar() {
+            DC.controlsRendered = false;
+            app.controlsposition = app.controlsposition == "left" ? "top" : "left"
+            renderControls();
+        }
 
         function renderControls() {
             let controlsDiv = g("controls")
@@ -138,10 +162,10 @@
             if (!DC.controlsRendered) {
                 controls.forEach(ctrl => {
                     ctrl.colors.forEach(color => {
-                        if (ctrl.char != "") {
-                            html += `<span id="${ctrl.name}-${color}" class="control-icon control-${position} ${ctrl.class}" style="color: ${color}" onclick="${ctrl.onclick}(this.id)">${ctrl.char[position]}</span>`;
+                        if (ctrl.char[position]) {
+                            html += `<span id="${ctrl.name}-${color}" class="control-icon control-${position} ${ctrl.class}" style="color: ${color}" onclick="itemSelected(this.id); ${ctrl.onclick}(this.id, this)">${ctrl.char[position]}</span>`;
                         } else {
-                            html += `<img id="${ctrl.name}-${color}" class="control-${position}" src="${ctrl.img[position]}" onclick="${ctrl.onclick}(this.id)"/>`;
+                            html += `<img id="${ctrl.name}-${color}" class="control-${position}" src="${ctrl.name}-${position}-${color}.png" onclick="itemSelected(this.id); ${ctrl.onclick}(this.id, this)"/>`;
                         }
                     })
                 })
@@ -156,7 +180,21 @@
                 controlsDiv.style.top = `${(window.innerHeight - controlsDiv.offsetHeight) / 2}px`;
                 controlsDiv.style.left = 0;
             }
+        }
 
+        function itemSelected(itemId) {
+            if(app.controlsposition == "left") {
+                g(itemId).style.width = DC.penExtendedWidth;
+                if(DC.lastSelectedItemId) {
+                    g(DC.lastSelectedItemId).style.width = DC.penWidth;
+                }
+            } else {
+                g(itemId).style.height = DC.penExtendedLength;
+                if(DC.lastSelectedItemId) {
+                    g(DC.lastSelectedItemId).style.height = DC.penLength;
+                }
+            }
+            DC.lastSelectedItemId = itemId;
         }
 
         function buildCanvas() {
