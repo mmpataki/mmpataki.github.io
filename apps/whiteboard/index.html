@@ -204,7 +204,7 @@
             canvas.addEventListener('mousedown', mousedown)
             canvas.addEventListener('mouseup', mouseup)
 
-            canvas.addEventListener('touchmove', touchmoved)
+            canvas.addEventListener('touchmove', touchmoved, false)
             canvas.addEventListener('touchstart', touchdown)
             canvas.addEventListener('touchup', touchup)
         }
@@ -224,6 +224,7 @@
         }
 
         function touchmoved(e) {
+            e.preventDefault();
             for (let i = 0; i < e.changedTouches.length; i++) {
                 t = e.changedTouches[0];
                 if (t.identifier == DC.curTouch)
