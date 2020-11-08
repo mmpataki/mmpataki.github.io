@@ -110,6 +110,7 @@
 
         class Line {
             constructor(pen, startPoint, pathid) {
+                this.size = pen.size;
                 this.pen = pen;
                 this.pts = [startPoint];
                 this.pathid = pathid;
@@ -242,7 +243,8 @@
             drawLine(l) {
                 this.ctx.beginPath();
                 this.ctx.strokeStyle = l.pen.color;
-                this.ctx.lineWidth = l.pen.size;
+                this.ctx.lineWidth = l.size;
+                this.ctx.lineJoin = "round";
                 for (let i = 0; i < l.pts.length; i++) {
                     let pt = l.pts[i];
                     if (!i) {
@@ -269,6 +271,7 @@
                 this.ctx.lineWidth = this.getSize(this.pen, pt)
                 this.curPath.addPoint(pt)
                 this.ctx.strokeStyle = this.pen.color;
+                this.ctx.lineJoin = "round";
                 this.ctx.lineTo(pt.x, pt.y)
                 this.ctx.stroke()
                 if (this.pen.isErasor()) {
@@ -550,7 +553,7 @@
         window.onresize = function () {
             canvas.resize();
             tools.draw();
-            psPicker.hide()
+            psPicker.hide();
         }
 
         function itemSelected(itemId) {
