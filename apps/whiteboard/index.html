@@ -58,14 +58,30 @@
 
         .dot {
             border-radius: 50%;
-            background-color: green;
+            margin: 3px;
+            border: solid 3px transparent;
+        }
+
+        .dot:hover {
+            border: solid 3px black;
+        }
+
+        .dot-left {
+            clear: both;
             display: block;
         }
 
-        .pen-settings {
+        .dot-top {
+            float: left;
+        }
+
+        #pen-settings {
             position: absolute;
             top: 0px;
             left: 0px;
+            padding-top: 10;
+            text-align: center;
+            vertical-align: center;
         }
     </style>
     <script>
@@ -144,30 +160,30 @@
             }
 
             drawItem(item) {
-                let id = `${item.name}-${item.color}`;
-                this.itemsMap[id] = item;
+                item.id = `${item.name}-${item.color}`;
+                this.itemsMap[item.id] = item;
                 if (item.chars && item.chars[this.position]) {
                     this.container.innerHTML += `
                         <span 
-                            id="${id}" 
+                            id="${item.id}" 
                             class="control-icon control-${this.position} ${item.class}" 
                             style="color: ${item.color}" 
                             onclick="itemSelected(this.id)">${item.chars[this.position]}</span>`;
                 } else {
                     this.container.innerHTML += `
                         <img 
-                            id="${id}" 
+                            id="${item.id}" 
                             class="control-${this.position}" 
                             src="${item.name}-${this.position}-${item.color}.png" 
                             onclick="itemSelected(this.id)"/>`;
                 }
                 if (item.selected) {
-                    this.itemSelected(id, g(id));
+                    this.itemSelected(item.id, g(item.id));
                 }
             }
 
             itemSelected(id, item) {
-                this.itemsMap[id].onSelect(this.itemsMap[id].obj)
+                this.itemsMap[id].onSelect(this.itemsMap[id])
                 if (this.position == "left") {
                     item.style.width = this.options.penExtendedWidth;
                     if (this.lastSelectedItemId && g(this.lastSelectedItemId)) {
@@ -331,9 +347,53 @@
             }
         }
 
+        class PenSizePicker {
+            constructor(sizes, position) {
+                this.sizes = sizes;
+                this.firstTime = true;
+                this.position = position;
+            }
+            changePosition(newPos) {
+                this.position = newPos;
+            }
+            showFor(pen) {
+                if (this.firstTime) {
+                    this.firstTime = false;
+                    return;
+                }
+                if(this.pp) {
+                    this.pp.remove()
+                }
+                let pp = document.createElement("div");
+                let r = g(pen.id).getBoundingClientRect()
+                let html = "";
+
+                pp.id = "pen-settings"
+                this.sizes.forEach(sz => {
+                    html += `<span class="dot dot-${this.position}" style="width: ${sz}px; height: ${sz}px; background-color: ${pen.obj.color}" onclick="penSizePicked(${sz})"></span>`
+                })
+                pp.innerHTML = "<center>" + html + "</center>";
+
+                if (this.position == "left") {
+                    pp.style.top = Math.round(r.top) + "px";
+                    pp.style.left = Math.round(r.left + r.width + 5) + "px";
+                } else {
+                    pp.style.top = Math.round(r.top + 45) + "px";
+                    pp.style.left = Math.round(r.left) + "px";
+                }
+                this.pp = pp;
+                document.body.appendChild(pp)
+            }
+            hide() {
+                if (this.pp)
+                    this.pp.remove()
+            }
+        }
+
 
         let canvas //= new Canvas();
         let tools //= new ToolBar();
+        let psPicker = new PenSizePicker([25, 20, 15, 10, 5], "left")
 
         window.onload = function () {
 
@@ -366,7 +426,7 @@
                     {},
                     pen.color,
                     pen,
-                    pen => canvas.pickPen(pen),
+                    pen => pickAndShowPenOptions(pen),
                     pen.color == "black" ? true : false
                 ))
             })
@@ -378,7 +438,7 @@
                 {},
                 "black",
                 new Pen("white", 30, true),
-                erasor => canvas.pickPen(erasor)
+                erasor => canvas.pickPen(erasor.obj)
             ))
 
             tools.addItem(new ToolBarItem(
@@ -405,10 +465,25 @@
                 { left: "&#11016;", top: "&#11019;" },
                 "black",
                 undefined,
-                x => tools.reposition(tools.position == "top" ? "left" : "top")
+                x => { 
+                    let pos = tools.position == "top" ? "left" : "top";
+                    tools.reposition(pos); 
+                    psPicker.changePosition(pos)
+                    psPicker.hide()
+                }
             ))
 
             tools.draw();
+        }
+
+        function pickAndShowPenOptions(pen) {
+            canvas.pickPen(pen.obj);
+            psPicker.showFor(pen);
+        }
+
+        function penSizePicked(sz) {
+            canvas.pen.size = sz;
+            psPicker.hide();
         }
 
         /* browser stuff, no need to handle in canvas */
@@ -461,6 +536,7 @@
         /* general handlers, calls to canvas */
         function pointerDown(e) {
             canvas.beginPath(new Point(e.x, e.y));
+            psPicker.hide()
         }
 
         function pointerUp(e) {
@@ -474,9 +550,11 @@
         window.onresize = function () {
             canvas.resize();
             tools.draw();
+            psPicker.hide()
         }
 
         function itemSelected(itemId) {
+            psPicker.hide()
             tools.itemSelected(itemId, g(itemId))
         }
 
@@ -487,12 +565,6 @@
 </head>
 
 <body>
-    <!-- <div class="pen-settings">
-        <span class="dot" style="width: 25px; height: 25px;"></span>
-        <span class="dot" style="width: 20px; height: 20px;"></span>
-        <span class="dot" style="width: 15px; height: 15px;"></span>
-        <span class="dot" style="width: 13px; height: 13px;"></span>
-    </div> -->
     <canvas id="canvas">
     </canvas>
     <div id="controls">
