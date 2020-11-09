@@ -219,11 +219,19 @@
                 this.canvas = canvas;
                 this.ctx = canvas.getContext("2d");
 
+                this.offsetX = 0;
+                this.offsetY = 0;
+
+                this.scale = 1;
+
+                this.gridCellSize = 50;
+
                 this.resize();
 
                 canvas.addEventListener('mousemove', mousemoved);
                 canvas.addEventListener('mousedown', mousedown)
                 canvas.addEventListener('mouseup', mouseup)
+                canvas.addEventListener('wheel', scrolled)
 
                 canvas.addEventListener('touchmove', touchmoved, false)
                 canvas.addEventListener('touchstart', touchdown)
@@ -235,8 +243,12 @@
                 this.setCursor()
             }
 
-            redraw() {
+            redraw(showGrid) {
+                console.log("redraw")
                 this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
+                if (showGrid) {
+                    this.showGrid();
+                }
                 this.lines.forEach(x => this.drawLine(x));
             }
 
@@ -248,9 +260,9 @@
                 for (let i = 0; i < l.pts.length; i++) {
                     let pt = l.pts[i];
                     if (!i) {
-                        this.ctx.moveTo(pt.x, pt.y)
+                        this.ctx.moveTo((pt.x + this.offsetX) * this.scale, (pt.y + this.offsetY) * this.scale)
                     } else {
-                        this.ctx.lineTo(pt.x, pt.y)
+                        this.ctx.lineTo((pt.x + this.offsetX) * this.scale, (pt.y + this.offsetY) * this.scale)
                     }
                 }
                 this.ctx.stroke();
@@ -258,9 +270,15 @@
 
             /* new path */
             beginPath(pt) {
-                this.curPath = new Line(this.pen, pt, this.pathId++)
                 this.ctx.beginPath();
+                this.ctx.lineCap = "round"
+                this.ctx.lineJoin = "round"
                 this.ctx.moveTo(pt.x, pt.y)
+                pt.x -= this.offsetX
+                pt.y -= this.offsetY
+                pt.x /= this.scale
+                pt.y /= this.scale
+                this.curPath = new Line(this.pen, pt, this.pathId++)
             }
 
             endPath() {
@@ -269,14 +287,19 @@
 
             lineTo(pt) {
                 this.ctx.lineWidth = this.getSize(this.pen, pt)
-                this.curPath.addPoint(pt)
                 this.ctx.strokeStyle = this.pen.color;
                 this.ctx.lineJoin = "round";
                 this.ctx.lineTo(pt.x, pt.y)
+                pt.x -= this.offsetX
+                pt.y -= this.offsetY
+                pt.x /= this.scale
+                pt.y /= this.scale
+                this.curPath.addPoint(pt)
+
                 this.ctx.stroke()
                 if (this.pen.isErasor()) {
                     this.ctx.beginPath();
-                    this.ctx.moveTo(pt.x, pt.y);
+                    this.ctx.moveTo((pt.x * this.scale + this.offsetX), (pt.y * this.scale + this.offsetY));
                     this.lines.push(this.curPath);
                     this.curPath = new Line(this.pen, pt)
                 }
@@ -285,11 +308,16 @@
                 return Math.sqrt(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2))
             }
 
+            getUrl() {
+                let u = new URL(document.URL)
+                return `${u.protocol}//${u.host}`
+            }
+            
             cursors = {
                 true: [ //for erasor
-                    "url('http://localhost:4000/cursor-small.png') 15 15, auto",
-                    "url('http://localhost:4000/cursor-medium.png') 30 30, auto",
-                    "url('http://localhost:4000/cursor-large.png') 60 60, auto"
+                    `url('${this.getUrl()}/cursor-small.png') 15 15, auto`,
+                    `url('${this.getUrl()}/cursor-medium.png') 30 30, auto`,
+                    `url('${this.getUrl()}/cursor-large.png') 60 60, auto`
                 ],
                 false: ["auto"]
             }
@@ -348,6 +376,48 @@
                     }
                 }
             }
+
+            move(curX, curY) {
+                this.offsetX += curX
+                this.offsetY += curY
+                this.redraw(true);
+            }
+
+            showGrid() {
+                this.ctx.strokeStyle = "lightgray"
+                /* vertical lines */
+                for (let i = this.offsetX % this.gridCellSize; i < this.canvas.width; i += this.gridCellSize) {
+                    this.ctx.moveTo(i, 0)
+                    this.ctx.lineTo(i, this.canvas.height)
+                    this.ctx.lineWidth = 0.5;
+                    this.ctx.stroke();
+                }
+
+                /* horizontal lines */
+                for (let i = this.offsetY % this.gridCellSize; i < this.canvas.height; i += this.gridCellSize) {
+                    this.ctx.moveTo(0, i)
+                    this.ctx.lineTo(this.canvas.width, i)
+                    this.ctx.stroke();
+                }
+            }
+
+            hideGrid() {
+                this.redraw()
+            }
+
+            zoomX(newScale, curpt) {
+                this.scale = Math.max(0.01, this.scale - newScale * 0.01);
+
+
+                let nx = (curpt.x * this.scale - curpt.x);
+                let ny = (curpt.y * this.scale - curpt.y);
+
+                console.log(`${nx} ${this.scale} ${curpt.x * this.scale} ${curpt.x}`)
+
+                this.offsetX -= nx;
+                this.offsetY -= ny;
+                this.redraw();
+            }
         }
 
         class PenSizePicker {
@@ -364,7 +434,7 @@
                     this.firstTime = false;
                     return;
                 }
-                if(this.pp) {
+                if (this.pp) {
                     this.pp.remove()
                 }
                 let pp = document.createElement("div");
@@ -468,9 +538,9 @@
                 { left: "&#11016;", top: "&#11019;" },
                 "black",
                 undefined,
-                x => { 
+                x => {
                     let pos = tools.position == "top" ? "left" : "top";
-                    tools.reposition(pos); 
+                    tools.reposition(pos);
                     psPicker.changePosition(pos)
                     psPicker.hide()
                 }
@@ -495,9 +565,13 @@
 
         /* mobile callbacks */
         function touchdown(e) {
-            let touch = e.changedTouches[0];
-            DC.curTouch = touch.identifier;
-            pointerDown({ x: touch.pageX, y: touch.pageY })
+            if (e.changedTouches.length == 1) {
+                let touch = e.changedTouches[0];
+                DC.curTouch = touch.identifier;
+                pointerDown({ x: touch.pageX, y: touch.pageY })
+            } else {
+                DC.dragging = true;
+            }
         }
 
         function touchup(e) {
@@ -506,20 +580,30 @@
                 if (t.identifier == DC.curTouch)
                     pointerUp();
             }
+            if(e.changedTouches.length < 2) {
+                DC.dragging = false;
+            }
         }
 
         function touchmoved(e) {
             e.preventDefault();
-            for (let i = 0; i < e.changedTouches.length; i++) {
-                t = e.changedTouches[0];
-                if (t.identifier == DC.curTouch)
-                    pointerMoved({ x: t.pageX, y: t.pageY });
+            if (e.changedTouches.length == 1) {
+                for (let i = 0; i < e.changedTouches.length; i++) {
+                    t = e.changedTouches[0];
+                    if (t.identifier == DC.curTouch)
+                        pointerMoved({ x: t.pageX, y: t.pageY });
+                }
             }
         }
 
         /* desktop callsbacks */
         function mousedown(e) {
             if (e.buttons && e.button == 0) {
+                DC.dragging = e.ctrlKey
+                if (e.ctrlKey) {
+                    DC.dragX = e.x
+                    DC.dragY = e.y
+                }
                 pointerDown({ x: e.x, y: e.y })
             }
         }
@@ -544,10 +628,24 @@
 
         function pointerUp(e) {
             canvas.endPath()
+            if (DC.dragging) {
+                DC.dragging = false
+                canvas.hideGrid()
+            }
         }
 
         function pointerMoved(e) {
-            canvas.lineTo(new Point(e.x, e.y))
+            if (DC.dragging) {
+                canvas.move(e.x - DC.dragX, e.y - DC.dragY)
+                DC.dragX = e.x
+                DC.dragY = e.y
+            } else {
+                canvas.lineTo(new Point(e.x, e.y))
+            }
+        }
+
+        function scrolled(e) {
+            canvas.zoomX(e.deltaY, new Point(e.x, e.y))
         }
 
         window.onresize = function () {
