@@ -267,7 +267,8 @@
                 }
                 if (i == 1) {
                     this.ctx.lineWidth = 0;
-                    this.ctx.arc(l.pts[0].x, l.pts[0].y, this.pen.size / 2.0, 0, Math.PI * 2)
+                    let pt = l.pts[0];
+                    this.ctx.arc((pt.x + this.offsetX) * this.scale, (pt.y + this.offsetY) * this.scale, this.pen.size / 2.0, 0, Math.PI * 2)
                     this.ctx.fill();
                 } else {
                     this.ctx.stroke();
@@ -653,10 +654,11 @@
         }
 
         function pointerUp(e) {
-            canvas.endPath()
             if (DC.dragging) {
                 DC.dragging = false
                 canvas.hideGrid()
+            } else {
+                canvas.endPath()
             }
         }
 
