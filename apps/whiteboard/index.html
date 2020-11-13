@@ -163,21 +163,21 @@
             drawItem(item) {
                 item.id = `${item.name}-${item.color}`;
                 this.itemsMap[item.id] = item;
-                if (item.chars && item.chars[this.position]) {
-                    this.container.innerHTML += `
-                        <span 
-                            id="${item.id}" 
-                            class="control-icon control-${this.position} ${item.class}" 
-                            style="color: ${item.color}" 
-                            onclick="itemSelected(this.id)">${item.chars[this.position]}</span>`;
-                } else {
+                if(item.imgs) {
                     this.container.innerHTML += `
                         <img 
                             id="${item.id}" 
                             class="control-${this.position}" 
                             src="${item.name}-${this.position}-${item.color}.png" 
                             onclick="itemSelected(this.id)"/>`;
-                }
+                } else if (item.chars && item.chars[this.position]) {
+                    this.container.innerHTML += `
+                        <span 
+                            id="${item.id}" 
+                            class="control-icon control-${this.position} ${item.class}" 
+                            style="color: ${item.color}" 
+                            onclick="itemSelected(this.id)">${item.chars[this.position]}</span>`;
+                } 
                 if (item.selected) {
                     this.itemSelected(item.id, g(item.id));
                 }
