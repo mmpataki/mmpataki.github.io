@@ -207,7 +207,7 @@
 
         class Canvas {
 
-            constructor(canvas, pen) {
+            constructor(canvas, pen, background) {
 
                 this.pen = pen;
                 this.lines = [];
@@ -218,6 +218,7 @@
 
                 this.canvas = canvas;
                 this.ctx = canvas.getContext("2d");
+                this.background = background;
 
                 this.offsetX = 0;
                 this.offsetY = 0;
@@ -316,6 +317,7 @@
                     this.curPath = new Line(this.pen, pt)
                 }
             }
+
             pointDist(p1, p2) {
                 return Math.sqrt(Math.pow(p1.x - p2.x, 2) + Math.pow(p1.y - p2.y, 2))
             }
@@ -341,6 +343,7 @@
                 }
                 return this.canvas.style.cursor = c;
             }
+
             getSize(pen, pt) {
                 if (pen.isErasor()) {
                     let drawSpeed = this.pointDist(this.curPath.pts[this.curPath.pts.length - 1], pt) / 5;
@@ -352,6 +355,7 @@
                 }
                 return pen.size;
             }
+
             resize() {
                 this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
                 this.canvas.width = window.innerWidth;
@@ -422,13 +426,14 @@
             }
 
             zoomX(newScale, curpt) {
+
+                console.log(`${newScale} ${curpt}`)
+
                 this.scale = Math.max(0.01, this.scale - newScale * 0.01);
 
 
                 let nx = (curpt.x * this.scale - curpt.x);
                 let ny = (curpt.y * this.scale - curpt.y);
-
-                console.log(`${nx} ${this.scale} ${curpt.x * this.scale} ${curpt.x}`)
 
                 this.offsetX -= nx;
                 this.offsetY -= ny;
@@ -480,6 +485,7 @@
         }
 
 
+        let background = "white";
         let canvas //= new Canvas();
         let tools //= new ToolBar();
         let psPicker = new PenSizePicker([25, 20, 15, 10, 5], "left")
@@ -496,7 +502,7 @@
             pens.push(new Pen("blue", 5));
 
             /* the html canvas wrapper */
-            canvas = new Canvas(g("canvas"), pens[0]);
+            canvas = new Canvas(g("canvas"), pens[0], background);
             canvas.resize();
 
             /* setup the toolbox */
@@ -523,16 +529,16 @@
             /* add erasor */
             tools.addItem(new ToolBarItem(
                 "erasor",
-                { left: "erasor-left.png", top: "erasor-top.png" },
+                true,
                 {},
                 "black",
-                new Pen("white", 30, true),
+                new Pen(background, 30, true),
                 erasor => canvas.pickPen(erasor.obj)
             ))
 
             tools.addItem(new ToolBarItem(
                 "undo",
-                { left: "undo-left.png", top: "undo-top.png" },
+                true,
                 { left: "⮌", top: "⮌" },
                 "black",
                 undefined,
@@ -541,7 +547,7 @@
 
             tools.addItem(new ToolBarItem(
                 "redo",
-                { left: "redo-left.png", top: "redo-top.png" },
+                true,
                 { left: "⮎", top: "⮎" },
                 "black",
                 undefined,
@@ -550,7 +556,7 @@
 
             tools.addItem(new ToolBarItem(
                 "movetoolbar",
-                undefined,
+                false,
                 { left: "&#11016;", top: "&#11019;" },
                 "black",
                 undefined,
@@ -603,7 +609,7 @@
             let numToch = e.touches.length;
             DC.zooming = (numToch == 2);
             pointerUp();
-            if(DC.touchDrag) {
+            if (DC.touchDrag) {
                 DC.dragging = DC.touchDrag = (numToch != 0);
             }
         }
@@ -618,7 +624,19 @@
                         pointerMoved({ x: t.pageX, y: t.pageY });
                 }
             } else if (numToch == 2) {
-
+                let p1 = new Point(e.touches[0].pageX, e.touches[0].pageY)
+                let p2 = new Point(e.touches[1].pageX, e.touches[1].pageY)
+                let dist = canvas.pointDist(p1, p2)
+                if (DC.lastZoomDist) {
+                    canvas.zoomX(
+                        dist - DC.lastZoomDist,
+                        new Point(
+                            Math.min(p1.x, p2.x) + Math.abs(p1.x - p2.x),
+                            Math.min(p1.y, p2.y) + Math.abs(p1.y - p2.y)
+                        )
+                    )
+                }
+                DC.lastZoomDist = dist
             } else if (numToch > 2) {
                 for (let i = 0; i < e.changedTouches.length; i++) {
                     if (e.changedTouches[i].identifier == DC.curTouch) {
@@ -659,8 +677,7 @@
         }
 
         function pointerUp(e) {
-            if (DC.dragging == undefined || DC.dragging) {
-                DC.dragging = false
+            if (DC.dragging) {
                 canvas.hideGrid()
             } else {
                 canvas.endPath()
@@ -696,9 +713,12 @@
             return document.getElementById(x);
         }
 
-        function dbg(x) {
+        window.console.log = send;
+        window.console.error = send;
+
+        function send(x) {
             var xhttp = new XMLHttpRequest();
-            xhttp.open("GET", `\r/log/${x}                                    `, true);
+            xhttp.open("GET", `/log${encodeURIComponent(" [" + x + "] ")}`, true);
             xhttp.send();
         }
     </script>
