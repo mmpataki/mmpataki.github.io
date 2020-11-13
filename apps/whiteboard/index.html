@@ -163,7 +163,7 @@
             drawItem(item) {
                 item.id = `${item.name}-${item.color}`;
                 this.itemsMap[item.id] = item;
-                if(item.imgs) {
+                if (item.imgs) {
                     this.container.innerHTML += `
                         <img 
                             id="${item.id}" 
@@ -177,7 +177,7 @@
                             class="control-icon control-${this.position} ${item.class}" 
                             style="color: ${item.color}" 
                             onclick="itemSelected(this.id)">${item.chars[this.position]}</span>`;
-                } 
+                }
                 if (item.selected) {
                     this.itemSelected(item.id, g(item.id));
                 }
@@ -590,6 +590,7 @@
             } else if (numToch > 2) {
                 // drag
                 DC.dragging = true;
+                DC.touchDrag = true;
                 DC.curTouch = e.changedTouches[0].identifier;
                 DC.dragX = e.changedTouches[0].pageX;
                 DC.dragY = e.changedTouches[0].pageY;
@@ -600,7 +601,9 @@
             let numToch = e.touches.length;
             DC.zooming = (numToch == 2);
             pointerUp();
-            DC.dragging = (numToch > 2);
+            if(DC.touchDrag) {
+                DC.dragging = DC.touchDrag = (numToch != 0);
+            }
         }
 
         function touchmoved(e) {
@@ -623,7 +626,7 @@
             }
         }
 
-        /* desktop callsbacks */
+        /* desktop callbacks */
         function mousedown(e) {
             if (e.buttons && e.button == 0) {
                 DC.dragging = e.ctrlKey
@@ -654,7 +657,7 @@
         }
 
         function pointerUp(e) {
-            if (DC.dragging) {
+            if (DC.dragging == undefined || DC.dragging) {
                 DC.dragging = false
                 canvas.hideGrid()
             } else {
@@ -691,17 +694,10 @@
             return document.getElementById(x);
         }
 
-        let dbgStart = false;
-        let yyyy = 0;
         function dbg(x) {
-            if (!dbgStart) {
-                document.body.innerHTML += `<div id="dbg" style="position: absolute; top: 0px; left: 60px; width: 300px; height: 300px;"></div>`;
-                dbgStart = true;
-            }
-            if (yyyy % 20 == 0)
-                g("dbg").innerHTML = ""
-            yyyy++;
-            g("dbg").innerHTML += x + "<br/>"
+            var xhttp = new XMLHttpRequest();
+            xhttp.open("GET", `\r/log/${x}                                    `, true);
+            xhttp.send();
         }
     </script>
 </head>
