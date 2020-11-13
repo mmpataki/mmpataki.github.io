@@ -627,7 +627,7 @@
                 let p1 = new Point(e.touches[0].pageX, e.touches[0].pageY)
                 let p2 = new Point(e.touches[1].pageX, e.touches[1].pageY)
                 let dist = canvas.pointDist(p1, p2)
-                if (DC.lastZoomDist) {
+                if (false) {
                     canvas.zoomX(
                         dist - DC.lastZoomDist,
                         new Point(
