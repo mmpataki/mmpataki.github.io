@@ -246,6 +246,8 @@
 
             redraw(showGrid) {
                 this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
+                this.ctx.fillStyle = background;
+                this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height)
                 if (showGrid) {
                     this.showGrid();
                 }
@@ -261,9 +263,9 @@
                 for (i = 0; i < l.pts.length; i++) {
                     let pt = l.pts[i];
                     if (!i) {
-                        this.ctx.moveTo((pt.x + this.offsetX) * this.scale, (pt.y + this.offsetY) * this.scale)
+                        this.ctx.moveTo(Math.round(pt.x * this.scale - this.offsetX), Math.round(pt.y * this.scale - this.offsetY))
                     } else {
-                        this.ctx.lineTo((pt.x + this.offsetX) * this.scale, (pt.y + this.offsetY) * this.scale)
+                        this.ctx.lineTo(Math.round(pt.x * this.scale - this.offsetX), Math.round(pt.y * this.scale - this.offsetY))
                     }
                 }
                 if (i == 1) {
@@ -271,7 +273,7 @@
                     let pt = l.pts[0];
                     this.ctx.fillStyle = l.pen.color;
                     this.ctx.lineWidth = l.pen.size;
-                    this.ctx.arc((pt.x + this.offsetX) * this.scale, (pt.y + this.offsetY) * this.scale, this.pen.size / 2.0, 0, Math.PI * 2)
+                    this.ctx.arc(pt.x * this.scale - this.offsetX, pt.y * this.scale - this.offsetY, this.pen.size / 2.0, 0, Math.PI * 2)
                     this.ctx.fill();
                 } else {
                     this.ctx.stroke();
@@ -284,8 +286,8 @@
                 this.ctx.lineCap = "round"
                 this.ctx.lineJoin = "round"
                 this.ctx.moveTo(pt.x, pt.y)
-                pt.x -= this.offsetX
-                pt.y -= this.offsetY
+                pt.x += this.offsetX
+                pt.y += this.offsetY
                 pt.x /= this.scale
                 pt.y /= this.scale
                 this.curPath = new Line(this.pen, pt, this.pathId++)
@@ -303,8 +305,8 @@
                 this.ctx.strokeStyle = this.pen.color;
                 this.ctx.lineJoin = "round";
                 this.ctx.lineTo(pt.x, pt.y)
-                pt.x -= this.offsetX
-                pt.y -= this.offsetY
+                pt.x += this.offsetX
+                pt.y += this.offsetY
                 pt.x /= this.scale
                 pt.y /= this.scale
                 this.curPath.addPoint(pt)
@@ -312,7 +314,7 @@
                 this.ctx.stroke()
                 if (this.pen.isErasor()) {
                     this.ctx.beginPath();
-                    this.ctx.moveTo((pt.x * this.scale + this.offsetX), (pt.y * this.scale + this.offsetY));
+                    this.ctx.moveTo((pt.x * this.scale - this.offsetX), (pt.y * this.scale - this.offsetY));
                     this.lines.push(this.curPath);
                     this.curPath = new Line(this.pen, pt)
                 }
@@ -395,30 +397,29 @@
 
             move(curX, curY) {
                 if (!isNaN(curX)) {
-                    this.offsetX += curX
+                    this.offsetX -= curX
                 }
                 if (!isNaN(curY)) {
-                    this.offsetY += curY
+                    this.offsetY -= curY
                 }
                 this.redraw(true);
             }
 
             showGrid() {
                 this.ctx.strokeStyle = "lightgray"
+                this.ctx.lineWidth = 1;
                 /* vertical lines */
                 for (let i = this.offsetX % this.gridCellSize; i < this.canvas.width; i += this.gridCellSize) {
                     this.ctx.moveTo(i, 0)
                     this.ctx.lineTo(i, this.canvas.height)
-                    this.ctx.lineWidth = 0.5;
-                    this.ctx.stroke();
                 }
 
                 /* horizontal lines */
                 for (let i = this.offsetY % this.gridCellSize; i < this.canvas.height; i += this.gridCellSize) {
                     this.ctx.moveTo(0, i)
-                    this.ctx.lineTo(this.canvas.width, i)
-                    this.ctx.stroke();
+                    this.ctx.lineTo(this.canvas.width, i);
                 }
+                this.ctx.stroke();
             }
 
             hideGrid() {
@@ -427,16 +428,12 @@
 
             zoomX(newScale, curpt) {
 
-                console.log(`${newScale} ${curpt}`)
+                let oldScale = this.scale;
+                this.scale = Math.max(0.01, this.scale + newScale * 0.01);
 
-                this.scale = Math.max(0.01, this.scale - newScale * 0.01);
+                this.offsetX += curpt.x * (this.scale - oldScale);
+                this.offsetY += curpt.y * (this.scale - oldScale);
 
-
-                let nx = (curpt.x * this.scale - curpt.x);
-                let ny = (curpt.y * this.scale - curpt.y);
-
-                this.offsetX -= nx;
-                this.offsetY -= ny;
                 this.redraw();
             }
         }
@@ -595,6 +592,8 @@
                 pointerDown({ x: touch.pageX, y: touch.pageY })
             } else if (numToch == 2) {
                 // pinch and zoom
+                DC.zoomPivotX = 1;
+                DC.zoomPivotY;
             } else if (numToch > 2) {
                 // drag
                 DC.dragging = true;
@@ -627,7 +626,7 @@
                 let p1 = new Point(e.touches[0].pageX, e.touches[0].pageY)
                 let p2 = new Point(e.touches[1].pageX, e.touches[1].pageY)
                 let dist = canvas.pointDist(p1, p2)
-                if (false) {
+                if (DC.lastZoomDist) {
                     canvas.zoomX(
                         dist - DC.lastZoomDist,
                         new Point(
@@ -695,7 +694,7 @@
         }
 
         function scrolled(e) {
-            canvas.zoomX(e.deltaY, new Point(e.x, e.y))
+            canvas.zoomX(-e.deltaY, new Point(e.x, e.y))
         }
 
         window.onresize = function () {
@@ -713,14 +712,31 @@
             return document.getElementById(x);
         }
 
-        window.console.log = send;
-        window.console.error = send;
+        if ('ontouchstart' in window) {
+            window.console.log = send;
+            window.console.error = send;
+        }
 
         function send(x) {
             var xhttp = new XMLHttpRequest();
             xhttp.open("GET", `/log${encodeURIComponent(" [" + x + "] ")}`, true);
             xhttp.send();
         }
+
+        let one = false;
+        function zup(e) {
+            if (e.key == 'z') {
+                canvas.zoomX(1, { x: 50, y: 50 });
+            } else {
+                if (one) return;
+                one = true;
+                canvas.beginPath({ x: 0, y: 0 })
+                canvas.lineTo({ x: 100, y: 100 })
+                canvas.endPath()
+            }
+        }
+
+        document.addEventListener('keypress', zup)
     </script>
 </head>
 
