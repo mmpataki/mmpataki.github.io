@@ -112,11 +112,24 @@
             constructor(pen, startPoint, pathid) {
                 this.size = pen.size;
                 this.pen = pen;
-                this.pts = [startPoint];
+                this.pts = [];
                 this.pathid = pathid;
+                this.addPoint(startPoint)
             }
             addPoint(pt) {
                 this.pts.push(pt)
+                if (this.minx == undefined || this.minx > pt.x) {
+                    this.minx = pt.x
+                }
+                if (this.miny == undefined || this.miny > pt.y) {
+                    this.miny = pt.y
+                }
+                if (this.maxx == undefined || this.maxx < pt.x) {
+                    this.maxx = pt.x
+                }
+                if (this.maxy == undefined || this.maxy < pt.y) {
+                    this.maxy = pt.y
+                }
             }
         }
 
@@ -211,6 +224,7 @@
 
                 this.pen = pen;
                 this.lines = [];
+                this.lineGroups = {};
                 this.removedLines = [];
 
                 this.pathId = 0;
@@ -227,6 +241,8 @@
 
                 this.gridCellSize = 50;
 
+                this.lastBatch = 0;
+
                 this.resize();
 
                 canvas.addEventListener('mousemove', mousemoved);
@@ -237,7 +253,7 @@
                 canvas.addEventListener('touchmove', touchmoved, false)
                 canvas.addEventListener('touchstart', touchdown)
                 canvas.addEventListener('touchend', touchup)
-                
+
                 this.showDBG();
             }
 
@@ -247,6 +263,7 @@
             }
 
             redraw(showGrid) {
+                this.lastBatch = 0;
                 this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
                 this.ctx.fillStyle = background;
                 this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height)
@@ -262,10 +279,33 @@
                     offsetX: <b>${this.offsetX}</b> &nbsp; 
                     offsetY: <b>${this.offsetY}</b> &nbsp; 
                     scale: <b>${this.scale}</b>
+                    lastBatch: <b>${this.lastBatch}</b>
                 `;
             }
 
+            skipLine(l) {
+                let
+                    minx = l.minx * this.scale - this.offsetX,
+                    maxx = l.maxx * this.scale - this.offsetX,
+                    miny = l.miny * this.scale - this.offsetY,
+                    maxy = l.maxy * this.scale - this.offsetY;
+                return (
+                    (
+                        (maxx >= 0) &&
+                        (minx <= this.canvas.width)
+                    ) &&
+                    (
+                        (miny <= this.canvas.height) &&
+                        (maxy >= 0)
+                    )
+                )
+            }
+
             drawLine(l) {
+                if (!this.skipLine(l)) {
+                    return;
+                }
+                this.lastBatch++;
                 this.ctx.beginPath();
                 this.ctx.strokeStyle = l.pen.color;
                 this.ctx.lineWidth = l.size;
@@ -589,9 +629,7 @@
             psPicker.hide();
         }
 
-        /* browser stuff, no need to handle in canvas */
-        let DC = {
-        };
+        let DC = { };
 
         /* mobile callbacks */
         function touchdown(e) {
@@ -734,16 +772,44 @@
             xhttp.send();
         }
 
-        let one = false;
         function zup(e) {
             if (e.key == 'z') {
                 canvas.zoomX(1, { x: 50, y: 50 });
-            } else {
-                if (one) return;
-                one = true;
+            } else if (e.key == 'd') {
                 canvas.beginPath({ x: 0, y: 0 })
                 canvas.lineTo({ x: 100, y: 100 })
                 canvas.endPath()
+            } else if (e.key == 't') {
+                test();
+            }
+        }
+
+        function timeIt(f, args) {
+            let start = new Date().getTime();
+            f(args);
+            let end = new Date().getTime();
+            return end - start;
+        }
+
+        function test() {
+            console.log(timeIt(genTestData, 10000));
+            console.log(timeIt(() => {
+                for (let i = 0; i < 100; i++) {
+                    canvas.move(-10, -10)
+                }
+            }))
+        }
+
+        function genTestData(nn) {
+            for (let i = 0; i < nn; i++) {
+                let n = Math.round(Math.random() * 5)
+                let bpt = new Point(Math.random() * nn, Math.random() * nn)
+                canvas.beginPath(bpt)
+                for (let j = 1; j < n; j++) {
+                    canvas.lineTo(new Point(bpt.x + Math.random() * 100, bpt.y + Math.random() * 100))
+                }
+                canvas.lineTo(bpt)
+                canvas.endPath();
             }
         }
 
