@@ -237,6 +237,8 @@
                 canvas.addEventListener('touchmove', touchmoved, false)
                 canvas.addEventListener('touchstart', touchdown)
                 canvas.addEventListener('touchend', touchup)
+                
+                this.showDBG();
             }
 
             pickPen(pen) {
@@ -252,6 +254,15 @@
                     this.showGrid();
                 }
                 this.lines.forEach(x => this.drawLine(x));
+                this.showDBG();
+            }
+
+            showDBG() {
+                g('dbg').innerHTML = `
+                    offsetX: <b>${this.offsetX}</b> &nbsp; 
+                    offsetY: <b>${this.offsetY}</b> &nbsp; 
+                    scale: <b>${this.scale}</b>
+                `;
             }
 
             drawLine(l) {
@@ -409,13 +420,13 @@
                 this.ctx.strokeStyle = "lightgray"
                 this.ctx.lineWidth = 1;
                 /* vertical lines */
-                for (let i = this.offsetX % this.gridCellSize; i < this.canvas.width; i += this.gridCellSize) {
+                for (let i = (this.gridCellSize - this.offsetX) % this.gridCellSize; i < this.canvas.width; i += this.gridCellSize) {
                     this.ctx.moveTo(i, 0)
                     this.ctx.lineTo(i, this.canvas.height)
                 }
 
                 /* horizontal lines */
-                for (let i = this.offsetY % this.gridCellSize; i < this.canvas.height; i += this.gridCellSize) {
+                for (let i = (this.gridCellSize - this.offsetY) % this.gridCellSize; i < this.canvas.height; i += this.gridCellSize) {
                     this.ctx.moveTo(0, i)
                     this.ctx.lineTo(this.canvas.width, i);
                 }
@@ -745,6 +756,7 @@
     </canvas>
     <div id="controls">
     </div>
+    <div id="dbg" style="top: 0; left: 0px; position: absolute;"></div>
 </body>
 
 </html>
