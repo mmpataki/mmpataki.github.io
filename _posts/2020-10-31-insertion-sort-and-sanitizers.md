@@ -83,22 +83,13 @@ All that is fine, mistakes are possible. But how will we catch them (the cause) 
 `Asan` is address sanitizer which adds a few more instructions to your code to do sanity checks to detect such stack corruptions (possibly it can do more, which I haven't explored much) and can be used as follows
 
 ```bash
-<<<<<<< HEAD
-mmp@mpataki insertionsort]$ g++ -fsanitize=address sol.cpp -o sol -g
-=======
 [mmp@mpataki insertionsort]$ g++ -fsanitize=address sol.cpp -o sol -g
->>>>>>> fd8bc4b5e584c9ee83a6c20b978b3861ffc9ecdb
 ```
 
 You have to install the `libasan` first
 ```bash
-<<<<<<< HEAD
-mmp@mpataki insertionsort]$ # Fedora / RHEL
-mmp@mpataki insertionsort]$ sudo yum install libasan
-=======
 # Fedora / RHEL
 [mmp@mpataki insertionsort]$ sudo yum install libasan
->>>>>>> fd8bc4b5e584c9ee83a6c20b978b3861ffc9ecdb
 ```
 
 Now when I run it (Note it clearly points out the line number 11)
@@ -155,11 +146,7 @@ Let's see some disassembly and see what code did the `asan` add.
 
 ### Without sanitizer
 ```
-<<<<<<< HEAD
-mmp@mpataki insertionsort]$ objdump -D ./sol
-=======
 [mmp@mpataki insertionsort]$ objdump -D ./sol
->>>>>>> fd8bc4b5e584c9ee83a6c20b978b3861ffc9ecdb
 ...
 0000000000401166 <_Z5isortiPi>:
   401166:	55                   	push   %rbp
@@ -227,11 +214,7 @@ mmp@mpataki insertionsort]$ objdump -D ./sol
 
 ### With sanitizer
 ```assembly
-<<<<<<< HEAD
-mmp@mpataki insertionsort]$ objdump -D ./sol
-=======
 [mmp@mpataki insertionsort]$ objdump -D ./sol
->>>>>>> fd8bc4b5e584c9ee83a6c20b978b3861ffc9ecdb
 ...
 0000000000401216 <_Z5isortiPi>:
   401216:	55                   	push   %rbp

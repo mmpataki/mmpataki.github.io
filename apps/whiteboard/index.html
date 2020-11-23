@@ -112,11 +112,24 @@
             constructor(pen, startPoint, pathid) {
                 this.size = pen.size;
                 this.pen = pen;
-                this.pts = [startPoint];
+                this.pts = [];
                 this.pathid = pathid;
+                this.addPoint(startPoint)
             }
             addPoint(pt) {
                 this.pts.push(pt)
+                if (this.minx == undefined || this.minx > pt.x) {
+                    this.minx = pt.x
+                }
+                if (this.miny == undefined || this.miny > pt.y) {
+                    this.miny = pt.y
+                }
+                if (this.maxx == undefined || this.maxx < pt.x) {
+                    this.maxx = pt.x
+                }
+                if (this.maxy == undefined || this.maxy < pt.y) {
+                    this.maxy = pt.y
+                }
             }
         }
 
@@ -211,6 +224,7 @@
 
                 this.pen = pen;
                 this.lines = [];
+                this.lineGroups = {};
                 this.removedLines = [];
 
                 this.pathId = 0;
@@ -227,6 +241,8 @@
 
                 this.gridCellSize = 50;
 
+                this.lastBatch = 0;
+
                 this.resize();
 
                 canvas.addEventListener('mousemove', mousemoved);
@@ -237,6 +253,8 @@
                 canvas.addEventListener('touchmove', touchmoved, false)
                 canvas.addEventListener('touchstart', touchdown)
                 canvas.addEventListener('touchend', touchup)
+
+                this.showDBG();
             }
 
             pickPen(pen) {
@@ -245,14 +263,49 @@
             }
 
             redraw(showGrid) {
+                this.lastBatch = 0;
                 this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height)
+                this.ctx.fillStyle = background;
+                this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height)
                 if (showGrid) {
                     this.showGrid();
                 }
                 this.lines.forEach(x => this.drawLine(x));
+                this.showDBG();
+            }
+
+            showDBG() {
+                g('dbg').innerHTML = `
+                    offsetX: <b>${this.offsetX}</b> &nbsp; 
+                    offsetY: <b>${this.offsetY}</b> &nbsp; 
+                    scale: <b>${this.scale}</b>
+                    lastBatch: <b>${this.lastBatch}</b>
+                `;
+            }
+
+            skipLine(l) {
+                let
+                    minx = l.minx * this.scale - this.offsetX,
+                    maxx = l.maxx * this.scale - this.offsetX,
+                    miny = l.miny * this.scale - this.offsetY,
+                    maxy = l.maxy * this.scale - this.offsetY;
+                return (
+                    (
+                        (maxx >= 0) &&
+                        (minx <= this.canvas.width)
+                    ) &&
+                    (
+                        (miny <= this.canvas.height) &&
+                        (maxy >= 0)
+                    )
+                )
             }
 
             drawLine(l) {
+                if (!this.skipLine(l)) {
+                    return;
+                }
+                this.lastBatch++;
                 this.ctx.beginPath();
                 this.ctx.strokeStyle = l.pen.color;
                 this.ctx.lineWidth = l.size;
@@ -261,9 +314,9 @@
                 for (i = 0; i < l.pts.length; i++) {
                     let pt = l.pts[i];
                     if (!i) {
-                        this.ctx.moveTo((pt.x + this.offsetX) * this.scale, (pt.y + this.offsetY) * this.scale)
+                        this.ctx.moveTo(Math.round(pt.x * this.scale - this.offsetX), Math.round(pt.y * this.scale - this.offsetY))
                     } else {
-                        this.ctx.lineTo((pt.x + this.offsetX) * this.scale, (pt.y + this.offsetY) * this.scale)
+                        this.ctx.lineTo(Math.round(pt.x * this.scale - this.offsetX), Math.round(pt.y * this.scale - this.offsetY))
                     }
                 }
                 if (i == 1) {
@@ -271,7 +324,7 @@
                     let pt = l.pts[0];
                     this.ctx.fillStyle = l.pen.color;
                     this.ctx.lineWidth = l.pen.size;
-                    this.ctx.arc((pt.x + this.offsetX) * this.scale, (pt.y + this.offsetY) * this.scale, this.pen.size / 2.0, 0, Math.PI * 2)
+                    this.ctx.arc(pt.x * this.scale - this.offsetX, pt.y * this.scale - this.offsetY, this.pen.size / 2.0, 0, Math.PI * 2)
                     this.ctx.fill();
                 } else {
                     this.ctx.stroke();
@@ -284,8 +337,8 @@
                 this.ctx.lineCap = "round"
                 this.ctx.lineJoin = "round"
                 this.ctx.moveTo(pt.x, pt.y)
-                pt.x -= this.offsetX
-                pt.y -= this.offsetY
+                pt.x += this.offsetX
+                pt.y += this.offsetY
                 pt.x /= this.scale
                 pt.y /= this.scale
                 this.curPath = new Line(this.pen, pt, this.pathId++)
@@ -303,8 +356,8 @@
                 this.ctx.strokeStyle = this.pen.color;
                 this.ctx.lineJoin = "round";
                 this.ctx.lineTo(pt.x, pt.y)
-                pt.x -= this.offsetX
-                pt.y -= this.offsetY
+                pt.x += this.offsetX
+                pt.y += this.offsetY
                 pt.x /= this.scale
                 pt.y /= this.scale
                 this.curPath.addPoint(pt)
@@ -312,7 +365,7 @@
                 this.ctx.stroke()
                 if (this.pen.isErasor()) {
                     this.ctx.beginPath();
-                    this.ctx.moveTo((pt.x * this.scale + this.offsetX), (pt.y * this.scale + this.offsetY));
+                    this.ctx.moveTo((pt.x * this.scale - this.offsetX), (pt.y * this.scale - this.offsetY));
                     this.lines.push(this.curPath);
                     this.curPath = new Line(this.pen, pt)
                 }
@@ -395,30 +448,29 @@
 
             move(curX, curY) {
                 if (!isNaN(curX)) {
-                    this.offsetX += curX
+                    this.offsetX -= curX
                 }
                 if (!isNaN(curY)) {
-                    this.offsetY += curY
+                    this.offsetY -= curY
                 }
                 this.redraw(true);
             }
 
             showGrid() {
                 this.ctx.strokeStyle = "lightgray"
+                this.ctx.lineWidth = 1;
                 /* vertical lines */
-                for (let i = this.offsetX % this.gridCellSize; i < this.canvas.width; i += this.gridCellSize) {
+                for (let i = (this.gridCellSize - this.offsetX) % this.gridCellSize; i < this.canvas.width; i += this.gridCellSize) {
                     this.ctx.moveTo(i, 0)
                     this.ctx.lineTo(i, this.canvas.height)
-                    this.ctx.lineWidth = 0.5;
-                    this.ctx.stroke();
                 }
 
                 /* horizontal lines */
-                for (let i = this.offsetY % this.gridCellSize; i < this.canvas.height; i += this.gridCellSize) {
+                for (let i = (this.gridCellSize - this.offsetY) % this.gridCellSize; i < this.canvas.height; i += this.gridCellSize) {
                     this.ctx.moveTo(0, i)
-                    this.ctx.lineTo(this.canvas.width, i)
-                    this.ctx.stroke();
+                    this.ctx.lineTo(this.canvas.width, i);
                 }
+                this.ctx.stroke();
             }
 
             hideGrid() {
@@ -427,16 +479,12 @@
 
             zoomX(newScale, curpt) {
 
-                console.log(`${newScale} ${curpt}`)
+                let oldScale = this.scale;
+                this.scale = Math.max(0.01, this.scale + newScale * 0.01);
 
-                this.scale = Math.max(0.01, this.scale - newScale * 0.01);
+                this.offsetX += curpt.x * (this.scale - oldScale);
+                this.offsetY += curpt.y * (this.scale - oldScale);
 
-
-                let nx = (curpt.x * this.scale - curpt.x);
-                let ny = (curpt.y * this.scale - curpt.y);
-
-                this.offsetX -= nx;
-                this.offsetY -= ny;
                 this.redraw();
             }
         }
@@ -581,9 +629,7 @@
             psPicker.hide();
         }
 
-        /* browser stuff, no need to handle in canvas */
-        let DC = {
-        };
+        let DC = { };
 
         /* mobile callbacks */
         function touchdown(e) {
@@ -595,6 +641,8 @@
                 pointerDown({ x: touch.pageX, y: touch.pageY })
             } else if (numToch == 2) {
                 // pinch and zoom
+                DC.zoomPivotX = 1;
+                DC.zoomPivotY;
             } else if (numToch > 2) {
                 // drag
                 DC.dragging = true;
@@ -695,7 +743,7 @@
         }
 
         function scrolled(e) {
-            canvas.zoomX(e.deltaY, new Point(e.x, e.y))
+            canvas.zoomX(-e.deltaY, new Point(e.x, e.y))
         }
 
         window.onresize = function () {
@@ -713,14 +761,59 @@
             return document.getElementById(x);
         }
 
-        window.console.log = send;
-        window.console.error = send;
+        if ('ontouchstart' in window) {
+            window.console.log = send;
+            window.console.error = send;
+        }
 
         function send(x) {
             var xhttp = new XMLHttpRequest();
             xhttp.open("GET", `/log${encodeURIComponent(" [" + x + "] ")}`, true);
             xhttp.send();
         }
+
+        function zup(e) {
+            if (e.key == 'z') {
+                canvas.zoomX(1, { x: 50, y: 50 });
+            } else if (e.key == 'd') {
+                canvas.beginPath({ x: 0, y: 0 })
+                canvas.lineTo({ x: 100, y: 100 })
+                canvas.endPath()
+            } else if (e.key == 't') {
+                test();
+            }
+        }
+
+        function timeIt(f, args) {
+            let start = new Date().getTime();
+            f(args);
+            let end = new Date().getTime();
+            return end - start;
+        }
+
+        function test() {
+            console.log(timeIt(genTestData, 10000));
+            console.log(timeIt(() => {
+                for (let i = 0; i < 100; i++) {
+                    canvas.move(-10, -10)
+                }
+            }))
+        }
+
+        function genTestData(nn) {
+            for (let i = 0; i < nn; i++) {
+                let n = Math.round(Math.random() * 5)
+                let bpt = new Point(Math.random() * nn, Math.random() * nn)
+                canvas.beginPath(bpt)
+                for (let j = 1; j < n; j++) {
+                    canvas.lineTo(new Point(bpt.x + Math.random() * 100, bpt.y + Math.random() * 100))
+                }
+                canvas.lineTo(bpt)
+                canvas.endPath();
+            }
+        }
+
+        document.addEventListener('keypress', zup)
     </script>
 </head>
 
@@ -729,6 +822,7 @@
     </canvas>
     <div id="controls">
     </div>
+    <div id="dbg" style="top: 0; left: 0px; position: absolute;"></div>
 </body>
 
 </html>
