@@ -3,9 +3,11 @@ tags: javascript hack
 category: Programming
 ---
 
-Today I was trying to write a user action recorder for a website of mine. Most of the coding was just adding a bunch of lines to beginning and end of each javascript function. I asked my brother to do it. He is an ameteur so he was kind of copy pasting the same code everywhere.
+Today I was trying to write a user action recorder for a website of mine. Most of the coding was just adding a bunch of lines to beginning and end of each javascript function so I asked my brother to do it. He is an amateur so he was kind of copy pasting the same code everywhere.
 
 I thought I could help him to do this using javascript prototypes. I had heard of them but never tried them earlier. So I started with a simple example
+
+[Here](https://jsfiddle.net/1dLrxqgh) is a fiddle which you can run
 
 ```html
 <html>
@@ -80,7 +82,7 @@ instrument(
 );
 ```
 
-Here is the complete code after the I use the `instrument` function.
+Here is the complete code which uses this `instrument` function. [Fiddle link](https://jsfiddle.net/364qn1vo)
 
 ```html
 <html>
