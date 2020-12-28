@@ -14,7 +14,7 @@ if (DFSClient.LOG.isDebugEnabled()) {
 
 Well everything is correct in this code. But when you start to see this first line repeating everywhere in the code it gets really annoying. There is a workaround but it has some cost. Let's see it.  
   
-### Workaround 1.  
+## Workaround 1.  
 Create a Logger class which has log level set. And checks whether it should emit the log to output stream.  
 
 ```java
@@ -46,7 +46,35 @@ LOG.debug("Hello world!");
 ```
   
 But this is going to affect the performance as the evaluation of the arguments happen before the level value is checked. If someone does a computation for printing then it would be wasted if log level is not set. Instead I propose a language support for this condition check before making a function call and evaluation of the arguments.  
-  
+
+## Workaround 2
+
+```java
+interface LogMsgProvider {
+    String get();
+}
+class Logger {
+    void debug(LogMsgProvider lmp) {
+        if(shouldLog(Level.DEBUG)) {
+            doLog(Level.DEBUG, lmp.get());
+        }
+    }
+}
+```
+
+And use it as 
+```java
+private static final Logger LOG = Logger.getLogger(...);
+
+void someFunction() {
+	...
+	LOG.debug(() -> doSomeHeavyOperation());
+	...
+}
+```
+
+Here there compiler generates additional classes and it can increae the metaspace consumption.
+
 For language such as Java I propose a keyword preval which can used to mark the argument (must be boolean). Only this argument must be evaluated before doing the further argument processing. So the debug code may look something like.  
   
 ```java
