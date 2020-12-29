@@ -1,0 +1,8 @@
+html, body, pre, code, div, .highlight, .highlighter-rouge, language-html {
+    /* background-color: black;
+    color: white; */
+}
+
+code, pre {
+    font-family: "Cascadia Mono" monospace;
+}
