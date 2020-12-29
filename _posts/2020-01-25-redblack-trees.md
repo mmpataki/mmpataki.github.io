@@ -26,30 +26,100 @@ The need for the RB Trees and these constraints is to keep a binary tree as bala
   
 Let's start with an assumption that, there exists a completely balanced binary tree with height `h` and we color every node in this tree with a single color `black`.  
 
-[![Balanced binary tree with all nodes colored black](https://1.bp.blogspot.com/-NSF7S_kRXJ4/XixMJv7akoI/AAAAAAAAGr0/stBlukmWF6oU2oxlBbGX5Fsn2n9IjsKaACLcBGAsYHQ/s320/completely_balanced_black_tree.png)](https://1.bp.blogspot.com/-NSF7S_kRXJ4/XixMJv7akoI/AAAAAAAAGr0/stBlukmWF6oU2oxlBbGX5Fsn2n9IjsKaACLcBGAsYHQ/s1600/completely_balanced_black_tree.png)
+<div class="mermaid">
+graph TD;
+	linkStyle default interpolate basis;
+	20((20)) ==> 10((10))
+	20 ==> 30((30))
+	10 ==> 5((5))
+	30 ==> 35((35))
+	classDef red fill:#f00, color: white; 
+	classDef black fill:#000, color: white;
+	class 20,10,30,5,35 black;
+</div>
 
-
+__Balanced binary tree with all nodes colored black__
+<br/><br/>
 
 When a new node is inserted in to this binary tree, it creates an imbalance. Because path to one of the leaf is longer than the paths to other leaves.  
 
-[![Imbalance created after one node insertion](https://1.bp.blogspot.com/-_QbWRXpQhMY/XixMmjcKylI/AAAAAAAAGr8/wQCBetmBszsVd2HQoWrywBh4xY4rnhrYwCLcBGAsYHQ/s320/completely_black_tree_one_node_insert.png)](https://1.bp.blogspot.com/-_QbWRXpQhMY/XixMmjcKylI/AAAAAAAAGr8/wQCBetmBszsVd2HQoWrywBh4xY4rnhrYwCLcBGAsYHQ/s1600/completely_black_tree_one_node_insert.png)
 
+<div class="mermaid">
+graph TD;
+	linkStyle default interpolate basis;
+	20((20)) ==> 10((10))
+	20 ==> 30((30))
+	10 ==> 5((5))
+	30 ==> 35((35))
+	35 ==> 40((40))
+	classDef red fill:#f00, color: white; 
+	classDef black fill:#000, color: white;
+	class 20,10,30,5,35,40 black;
+</div>
+
+__Imbalance created after one node insertion__
+<br/><br/>
   
 Constraint 3 tries to keep this imbalance in control. It enforces us to color one of the node as red in the new path (the one which is longer than others).  
 
-[![Leaf is colored red. Constraint 3 holds.](https://1.bp.blogspot.com/-jQF0kQDucIA/XixND2CfEQI/AAAAAAAAGsE/u4Ht44PZz98UYRalckyNbqV3jtrwHZzrACLcBGAsYHQ/s320/constraint_3_applied_leaf_colored_as_red.png)](https://1.bp.blogspot.com/-jQF0kQDucIA/XixND2CfEQI/AAAAAAAAGsE/u4Ht44PZz98UYRalckyNbqV3jtrwHZzrACLcBGAsYHQ/s1600/constraint_3_applied_leaf_colored_as_red.png)
+<div class="mermaid">
+graph TD;
+	linkStyle default interpolate basis;
+	20((20)) ==> 10((10))
+	20 ==> 30((30))
+	10 ==> 5((5))
+	30 ==> 35((35))
+	35 ==> 40((40))
+	classDef red fill:#f00, color: white; 
+	classDef black fill:#000, color: white;
+	class 20,10,30,5,35 black;
+	class 40 red;
+</div>
+
+__Leaf is colored red. Constraint 3 holds.__
+<br/><br/>
 
   
 But we can still create imbalance by coloring every new node inserted in this new path as `red`. This way the new path can grow without a limit.  
 
-[![Constraint 3 holds, but still we can cause imbalance](https://1.bp.blogspot.com/-AffsxwTNZR8/XixNbDztIBI/AAAAAAAAGsM/nFQi-J1UCNgfabxmJNxlrJixR2XMpnSgQCLcBGAsYHQ/s320/flaw_in_constraint_3.png)](https://1.bp.blogspot.com/-AffsxwTNZR8/XixNbDztIBI/AAAAAAAAGsM/nFQi-J1UCNgfabxmJNxlrJixR2XMpnSgQCLcBGAsYHQ/s1600/flaw_in_constraint_3.png)
+<div class="mermaid">
+graph TD;
+	linkStyle default interpolate basis;
+	20((20)) ==> 10((10))
+	20 ==> 30((30))
+	10 ==> 5((5))
+	30 ==> 35((35))
+	35 ==> 40((40))
+	40 -.-> 45((45))
+	classDef red fill:#f00, color: white; 
+	classDef black fill:#000, color: white;
+	class 20,10,30,5,35 black;
+	class 40,45 red;
+</div>
 
+__Constraint 3 holds, but still we can cause imbalance__
+<br/><br/>
   
 Constraint 2 solves this problem. Now a red node cannot have red children. So at worst case, the path can grow up to twice the number of black nodes in that path (2 \* h). (The node colors alternate from root to the leaf in the path)  
 
-[![Tree honoring constraint 2. (We recolored the tree)](https://1.bp.blogspot.com/-jPID2ZV0IPo/XixOOuqGx7I/AAAAAAAAGsY/HWp6IgF8FQAYJdNket4nLg39qx01nSvAQCLcBGAsYHQ/s320/constraint_2_applied.png)](https://1.bp.blogspot.com/-jPID2ZV0IPo/XixOOuqGx7I/AAAAAAAAGsY/HWp6IgF8FQAYJdNket4nLg39qx01nSvAQCLcBGAsYHQ/s1600/constraint_2_applied.png)
+<div class="mermaid">
+graph TD;
+	linkStyle default interpolate basis;
+	20((20)) ==> 10((10))
+	20 ==> 30((30))
+	10 ==> 5((5))
+	30 ==> 35((35))
+	35 ==> 40((40))
+	40 -.-> 45((45))
+	classDef red fill:#f00, color: white; 
+	classDef black fill:#000, color: white;
+	class 20,10,5,35,45 black;
+	class 30,40 red;
+</div>
+
+__Tree honoring constraint 2. (We recolored the tree)__
+<br/><br/>
 
 There are two ways possible to color such path. One starts with `black` root and other with `red`.  
 
 If the root was colored `red`, the children of root should be colored `black` (Constraint 2). In this case a RB-Tree with only two nodes violates the constraint 3. So constraint 1 says color the root with `black`.  
-

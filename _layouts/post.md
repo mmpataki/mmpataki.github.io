@@ -45,9 +45,17 @@ layout: default
 
 <br/>
 <br/>
+<!--mathjax-->
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+<!--mermaid js-->
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad:true});</script>
 
 <center>
 {% include share-buttons.html %}
 </center>
 <hr/>
 {%include comments.html %}
+
