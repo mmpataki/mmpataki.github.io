@@ -82,3 +82,9 @@ sequenceDiagram
 </div>
 
 The reason for adding methods to class is obvious, we are allowing to instrument methods in classes and if we use the global functions, the `this` reference will not be available.
+
+### Advantages
+1. We can instrument any classes loaded in a webpage using the browser console.
+
+### Points to note
+1. A function can be instrumented as only once using its name. To instrument a function multiple times, we can modify the `instrument` to use generate unique new function names.
