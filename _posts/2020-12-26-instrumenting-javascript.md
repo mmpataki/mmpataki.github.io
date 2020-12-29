@@ -51,3 +51,36 @@ Here is the complete code which uses this `instrument` function.
 
 Although the code looks huge, you would see the benifits once the number of functions to be instrumented crosses 3-4.
 
+
+So here is how it works. `instrument` basically injects 3 functions in to your class per method. Let's say you instrumented a function called `foo` these functions will be added to your class.
+1. \_\_foo\_\_instrumented
+2. \_\_pre\_\_foo\_\_instrumented
+3. \_\_post\_\_foo\_\_instrumented
+
+And this is how they are called
+<div class="mermaid">
+sequenceDiagram
+    participant caller
+    participant foo
+    participant __pre__foo__instrumented
+    participant __foo__instrumented
+    participant __post__foo__instrumented
+    caller->>foo: arguments
+    foo->>__pre__foo__instrumented: "foo", arguments
+    activate __pre__foo__instrumented
+    __pre__foo__instrumented->>foo: return
+    deactivate __pre__foo__instrumented
+    foo->>__foo__instrumented: arguments
+    activate __foo__instrumented
+    __foo__instrumented->>foo: return
+    deactivate __foo__instrumented
+    foo->>__post__foo__instrumented: "foo", arguments
+    activate __post__foo__instrumented
+    __post__foo__instrumented->>foo: return
+    deactivate __post__foo__instrumented
+    foo->>caller: return
+</div>
+
+<!--mermaid js-->
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad:true});</script>
