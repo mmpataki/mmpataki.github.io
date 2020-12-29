@@ -34,7 +34,7 @@ function instrument(klass, arr, pre, post) {
 }
 ```
 
-Using this instrumentation function one can inject custom code into any [global] function of a class. Here is the usage
+Using this `instrumentation` function one can inject custom code into any [global] function of a class. Here is the usage
 
 ```javascript
 instrument(
@@ -81,6 +81,4 @@ sequenceDiagram
     foo->>caller: return
 </div>
 
-<!--mermaid js-->
-<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
-<script>mermaid.initialize({startOnLoad:true});</script>
+The reason for adding methods to class is obvious, we are allowing to instrument methods in classes and if we use the global functions, the `this` reference will not be available.
