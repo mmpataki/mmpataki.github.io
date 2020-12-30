@@ -1,0 +1,15 @@
+{
+    "background_color": "purple",
+    "description": "Random posts on programming, interesting issues, thoughts",
+    "display": "fullscreen",
+    "icons": [
+      {
+        "src": "images/icons/icon.png",
+        "sizes": "288x288",
+        "type": "image/png"
+      }
+    ],
+    "name": "mmp-notes",
+    "short_name": "mmp-notes",
+    "start_url": "index.html"
+  }
