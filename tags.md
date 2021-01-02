@@ -13,6 +13,9 @@ permalink: /archive/
     color: gray;
     font-size: 0.9em;
   }
+  sup, sub {
+    font-size: 14px;
+  }
 </style>
 
 <div id="tagcloud">
@@ -140,7 +143,7 @@ permalink: /archive/
     for(tag in tags) {
       var pages = tags[tag].pages;
       document.getElementById("tagcloud").innerHTML += `
-        <code style="background-color: ${tags[tag].selected ? "skyblue": "defcol"}; font-size: ${12 + 4 * pages.length}px;" title="${pages.length} post${pages.length > 1 ? "s":""}" onclick="tagClicked('${tag}')">${tag}</code>
+        <code style="background-color: ${tags[tag].selected ? "skyblue": "defcol"}; font-size: ${12 + 4 * pages.length}px;" title="${pages.length} post${pages.length > 1 ? "s":""}" onclick="tagClicked('${tag}')">${tag}<sup>(${pages.length})</sup></code>
       `;
     }
   }
