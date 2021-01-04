@@ -10,7 +10,7 @@ __As always here is the story__
 
 I was trying to debug a hanging `python` command. `pstack` said it was connecting somewhere.
 ```bash
-# pstack 24372
+$ pstack 24372
 #0  0x00007f3ea2964c10 in __poll_nocancel () from /lib64/libc.so.6
 #1  0x00007f3e98717b3c in internal_select_ex.isra.0 () from /usr/lib64/python2.7/lib-dynload/_socketmodule.so
 #2  0x00007f3e987183c4 in internal_connect () from /usr/lib64/python2.7/lib-dynload/_socketmodule.so
@@ -27,7 +27,7 @@ I was trying to debug a hanging `python` command. `pstack` said it was connectin
 
 Where was it connecting to?
 ```bash
-# lsof -p 24372
+$ lsof -p 24372
 ...
 python  24372 root    4w   REG              253,0    343936 201366877 /var/log/rhsm/rhsm.log
 python  24372 root    5u  IPv4          222394982       0t0       TCP xyz.abc.mno:46640->subscription.rhsm.redhat.com:https (SYN_SENT)
@@ -42,8 +42,8 @@ Now I disabled the plugin (settings are in `/etc/yum/pluginconf.d/subscription-m
 
 `kill -13` / `kill -2` didn't help. So I went for a `gdb` approach. Since I already knew the `fd` of the socket (check the `lsof` output above) it's only matter of calling `close` system call.
 
-```
-# gdb -p 24372
+```bash
+$ gdb -p 24372
 ...
 Missing separate debuginfos, use: debuginfo-install python-2.7.5-86.el7.x86_64
 (gdb) info threads
