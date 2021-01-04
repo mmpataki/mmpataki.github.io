@@ -52,13 +52,11 @@ Missing separate debuginfos, use: debuginfo-install python-2.7.5-86.el7.x86_64
 (gdb) t 1
 [Switching to thread 1 (Thread 0x7f57a239b740 (LWP 24372))]
 #0  0x00007f57a11c9c10 in __poll_nocancel () from /lib64/libc.so.6
-(gdb) close(5)
-Undefined command: "close".  Try "help".
 (gdb) call close(5)
 $1 = 0
-(gdb) exit
-Undefined command: "exit".  Try "help".
 (gdb) quit
+A debugging session is active.
+...
 ```
 
 That was it! socket was closed and process continued (it was trying different alternatives.)
