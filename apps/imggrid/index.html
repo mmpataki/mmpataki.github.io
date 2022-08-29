@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Image grapher</title>
+    <script>
+        let img;
+        function readSingleFile(evt) {
+            var tgt = evt.target || window.event.srcElement, files = tgt.files;
+            if (files && files.length) {
+                img = new Image;
+                img.onload = function() { draw() }
+                img.src = URL.createObjectURL(files[0]);
+            }
+        }
+        function draw() {
+            if (!img) return
+            var ctx = document.getElementById('myCanvas').getContext('2d');
+
+            let width = img.naturalWidth, height = img.naturalHeight, gridcellside = document.getElementById('gridcellside').value;
+            ctx.canvas.width = width, ctx.canvas.height = height;
+            ctx.clearRect(0, 0, width, height);
+            ctx.drawImage(img, 0, 0);
+
+            for (let i = 0; i < (width / gridcellside) + 1; i++) {
+                ctx.moveTo(i * gridcellside, 0);
+                ctx.lineTo(i * gridcellside, height)
+            }
+            for (let i = 0; i < (height / gridcellside) + 1; i++) {
+                ctx.moveTo(0, i * gridcellside);
+                ctx.lineTo(width, i * gridcellside)
+            }
+            ctx.stroke()
+        }
+
+    </script>
+</head>
+
+<body>
+    <div style="display: flex; flex-direction: column; margin: 5px 20px;">
+        <h2>Display image in grid</h2>
+        <div style="display: flex; margin-bottom: 10px;">
+            <input onchange="readSingleFile(event)" type="file" style="flex-grow: 1;" />
+            <label>
+                Grid cell side size in pixels
+                <input id="gridcellside" onchange="draw()" type="number" value="50">
+            </label>
+        </div>
+        <canvas id="myCanvas" width="200" height="100"></canvas>
+    </div>
+</body>
+
+</html>
