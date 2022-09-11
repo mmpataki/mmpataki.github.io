@@ -25,4 +25,7 @@ date: 2022-09-11 09:51:00 +05:30
 ಸಂತತ ಭಕುತರ ಸಲುಹುವ ಹೆಳವನಕಟ್ಟಿ   
 ಇಂಥ ರಂಗಯ್ಯಗೇನೆಂದು ಮನಸೋತೆ  
 
+sung by unknown (please let me know his name if you know)
+[https://www.youtube.com/watch?v=bsLtXuUpgBU](https://www.youtube.com/watch?v=bsLtXuUpgBU)
+
 \- ಹೆಳವನಕಟ್ಟೆ ಗಿರಿಯಮ್ಮ
