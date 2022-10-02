@@ -1,5 +1,5 @@
 ---
-tags: mooru naamagala kaaranavenu
+tags: mooru naamagala kaaranavenu gopaladasaru
 category: सन्स्कृति
 title: ಮೂರು ನಾಮಗಳ ಧರಿಸಿದ ಕಾರಣವೇನು
 date: 2022-10-02 18:46:00 +05:30
@@ -7,7 +7,7 @@ date: 2022-10-02 18:46:00 +05:30
 
 ೩ನೇ ಪದ್ಯದ ಸೌಂದರ್ಯ ನೋಡಿ ಬೇರೆ ಕಡೆ ಸಿಕ್ಕರೂ ಇಲ್ಲಿ ನಕಲು ಮಾಡಿದ್ದೇನೆ.
   
-https://youtu.be/MqmnwrFUsuI
+[https://youtu.be/MqmnwrFUsuI](https://youtu.be/MqmnwrFUsuI)
   
   
 ಮೂರು ನಾಮಗಳ ಧರಿಸಿದ ಕಾರಣವೇನು \|  
