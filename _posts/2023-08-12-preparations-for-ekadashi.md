@@ -5,7 +5,7 @@ title: Preparations for ekadashi
 date: 2023-08-12 9:28:00 +05:30
 ---
 
-Today is `Ekadashi` and it's been almost an year I am doing `nirjala upavasa` on `ekadashi`s. You might already know the benefits of `upavasa` (fasting) or intermittent fasting (for gen-z), so I am going to share some of my findings / preparation tricks here.
+Today is `Ekadashi`! You might already know the benefits of `upavasa` (fasting) or intermittent fasting (for gen-z), so I am going to share some of my findings / preparation tricks here.
 
 Let's take a divergence here and understand something different. Suppose you are a lower middle class person who owns a car, one fine day in a middle of nowhere your car doesn't start (or stops). 
 - What will you do?
@@ -47,13 +47,12 @@ Doing `upavasa` with a non-empty stomach has bad effects (gastric / constipation
         - `Gandusha` means gargling  (cleaning the mouth). Holding the water in and expanding and contracting the mouth quickly, cleans the mouth and teetg and  and you will not have much cravings later. It's said in few texts that one should do this (expansion and contraction) 16-32 times.
 
 -  Tricks for emptying the stomach
-    - Few years back, I had a compulsion of awakening the digestive tract by drinking water to trigger the bowel movement in the morning. I have heard about other compulsions like smoking / chewing tobacco to do the same. __But once you start with good food habbits, these will turn out as stupid means__. But at times, we need to know some workarounds for this, here are few I found useful.
+    - Few years back, I had a compulsion of awakening the digestive tract by drinking water to trigger the bowel movement in the morning. I have heard about other compulsions like smoking / chewing tobacco to do the same. __But once you start with good food habbits, these will turn out as stupid means__. But at times, we need to know some workarounds for this, here is one I found useful.
         - On ekadashi
-            - __Drink water__: If you truly want to do upavasa, you should do it with empty stomach. So drink minimal water required.
+            - `Malasana` - This is a yogasana where you sit as if you are using a indian style toilet and do deep breathing.
         - normal days
             - Drink warm water mixed with ghee
             - Drink warm milk
-        - `Malasana` - This is a yogasana where you sit as if you are using a indian style toilet and keep deep breathing.
 
 
 ### 2. Sufficient water level in body
@@ -65,7 +64,7 @@ A person volunatarily does something because of mix of the 3 paths
 - __Bhakti__ - He has bhakti on something / someone which inspires him to do it
 - __Karma__ - He does it because he has to do it.
 
-You pick a reason / path from above and try to be on that path (be a yogi of that path). A question may arise here - "strong resolve to be on any of the above path?.
+You pick a reason / path from above and try to be on that path (be a yogi of that path). A question may arise here - "strong resolve to be on any of the above path?".
 
 ### 4. A proper plan to spend the day
 On the day of upavasa, without a proper plan one can cause imbalance in their body. So usually it is adviced to
