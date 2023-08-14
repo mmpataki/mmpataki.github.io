@@ -11,10 +11,11 @@ This page has few games which are used in tutorials I have built. Feel free to p
 # [xdiff](xdiff)
 A simple hadoop *-site.xml comparator.
 
-<br/>
-
 # [url-codec](urlcodec)
 A simple single player game to demonstrate the capabilities of Javascript and HTML.
 
 # [whiteboard](whiteboard)
 A simple WYSIWYG whiteboard app (still in development)
+
+# [shalmala](shalmala)
+A carnatic music practise apps which shows random notes to practise.
