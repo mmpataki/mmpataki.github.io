@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/apps/shalmala/static/css/main.8eb9be21.css",
+    "main.js": "/apps/shalmala/static/js/main.8e75ae9b.js",
+    "index.html": "/apps/shalmala/index.html",
+    "main.8eb9be21.css.map": "/apps/shalmala/static/css/main.8eb9be21.css.map",
+    "main.8e75ae9b.js.map": "/apps/shalmala/static/js/main.8e75ae9b.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.8eb9be21.css",
+    "static/js/main.8e75ae9b.js"
+  ]
+}
