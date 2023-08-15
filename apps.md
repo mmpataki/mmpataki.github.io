@@ -18,4 +18,4 @@ A simple single player game to demonstrate the capabilities of Javascript and HT
 A simple WYSIWYG whiteboard app (still in development)
 
 # [shalmala](shalmala)
-A carnatic music practise apps which shows random notes to practise.
+A carnatic music practise app which shows notes to practise.

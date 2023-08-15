@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/apps/shalmala/static/css/main.d975e0ab.css",
-    "main.js": "/apps/shalmala/static/js/main.283f7257.js",
+    "main.css": "/apps/shalmala/static/css/main.222c2a13.css",
+    "main.js": "/apps/shalmala/static/js/main.c8930987.js",
     "index.html": "/apps/shalmala/index.html",
-    "main.d975e0ab.css.map": "/apps/shalmala/static/css/main.d975e0ab.css.map",
-    "main.283f7257.js.map": "/apps/shalmala/static/js/main.283f7257.js.map"
+    "main.222c2a13.css.map": "/apps/shalmala/static/css/main.222c2a13.css.map",
+    "main.c8930987.js.map": "/apps/shalmala/static/js/main.c8930987.js.map"
   },
   "entrypoints": [
-    "static/css/main.d975e0ab.css",
-    "static/js/main.283f7257.js"
+    "static/css/main.222c2a13.css",
+    "static/js/main.c8930987.js"
   ]
 }
