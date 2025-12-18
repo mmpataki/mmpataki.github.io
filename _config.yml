@@ -32,11 +32,22 @@ theme: minima
 plugins:
   - jekyll-feed
   - jekyll-paginate
-paginate: 5
+  - jekyll-seo-tag
+paginate: 8
 
+image:
+  path: /images/icons/monkey-upright.png
+  height: 100
+  width: 100
+  
 ---
 layout: default
 comments: true
+
+---
+kramdown:
+    auto_ids: true
+
 # other options
 ---
 

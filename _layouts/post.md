@@ -15,14 +15,14 @@ layout: default
 		{% if words < 360 %}
 		1 min read
 		{% else %}
-		{{ words | divided_by:180 }} mins read
+		{{ words | divided_by:180 | plus:2 }} mins read
 		{% endif %}
 	{% else %}
 		{% assign words = content | number_of_words %}
 		{% if words < 360 %}
 		1 min read
 		{% else %}
-		{{ words | divided_by:180 }} mins read
+		{{ words | divided_by:180 | plus:2 }} mins read
 		{% endif %}
 	{% endif %}
 </span>
@@ -30,13 +30,13 @@ layout: default
 <br/>
 
 <i class="fa fa-calendar" aria-hidden="true"></i>  &nbsp;
-<span>{{ page.date | date: '%B %d, %Y' }}</span>
+<span class="postpage-date">{{ page.date | date: '%B %d, %Y' }}</span>
 
 <br/>
 
 <i class="fa fa-tags" aria-hidden="true"></i> &nbsp;
 {% for tag in page.tags %}
-  <code><a href="/archive?id={{tag}}">{{ tag }}</a></code>
+  <code class="postpage-tag"><a href="/archive?id={{tag}}">{{ tag }}</a></code>
 {% endfor %}
 
 
