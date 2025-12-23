@@ -26,3 +26,7 @@ code, pre {
 .wrapper {
     max-width: 900px;
 }
+
+.site-title {
+    text-decoration: underline;
+}
