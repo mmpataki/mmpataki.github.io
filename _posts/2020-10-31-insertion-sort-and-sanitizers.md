@@ -1,7 +1,7 @@
 ---
 title: Sorting and Sanitizers
 tags: sorting, algorithms
-category: Programming
+category: programming
 ---
 
 Title is misleading isn't it? What has sanitizers to do with insertion sort? 

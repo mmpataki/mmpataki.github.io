@@ -1,6 +1,6 @@
 ---
 tags: gdb linux hack
-category: Programming
+category: programming
 title: Redirect/Reopen a existing stream in Linux
 date: 2025-03-20 23:21:00 +05:30
 ---

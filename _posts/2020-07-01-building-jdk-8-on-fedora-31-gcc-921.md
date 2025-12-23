@@ -1,6 +1,6 @@
 ---
 tags: build jdk fedora jdk8
-category: Programming
+category: programming
 ---
 
 This blog lists out the steps to build JDK 8 on Fedora 31. I had some compilation problems while building it, so you may find this useful.

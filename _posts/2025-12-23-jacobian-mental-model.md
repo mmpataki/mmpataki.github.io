@@ -1,6 +1,6 @@
 ---
 tags: maths ml jacobian mental-model
-category: ML
+category: ml
 title: Jacobian
 date: 2025-12-23 15:56:00 +05:30
 ---

@@ -1,5 +1,5 @@
 ---
-category: Programming
+category: programming
 tags: remote zoom hack
 title: Remote control machines in VPN
 ---

@@ -1,7 +1,7 @@
 ---
 title: Linux memory notes
 tags: programming linux memory
-category: Programming
+category: programming
 ---
 
 Read these shorts (tests) to understand how the memory allocation works in Linux.

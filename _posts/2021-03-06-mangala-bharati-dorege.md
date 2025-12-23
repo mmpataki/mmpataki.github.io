@@ -1,6 +1,6 @@
 ---
 tags: hanuma bheema madhva aarati
-category: सन्स्कृति
+category: sanskruti
 title: ಮಂಗಲ ಭಾರತಿ ದೊರೆಗೆ
 date: 2021-03-06 11:24:00 +05:30
 ---

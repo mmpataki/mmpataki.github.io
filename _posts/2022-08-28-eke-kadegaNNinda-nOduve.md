@@ -1,6 +1,6 @@
 ---
 tags: krushna, purandaradasa
-category: सन्स्कृति
+category: sanskruti
 title: ಏಕೆ ಕಡೆಗಣ್ಣಿಂದ ನೋಡುವೆ
 date: 2022-08-28 11:24:00 +05:30
 ---

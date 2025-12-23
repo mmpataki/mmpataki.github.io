@@ -1,6 +1,6 @@
 ---
 tags: endianness c hack
-category: Programming
+category: programming
 ---
 
 Have you ever thought which type of memory architecture (Little Endian or Big Endian) your machine has. Can you write a program to find this?  

@@ -1,6 +1,6 @@
 ---
 tags: mooru naamagala kaaranavenu gopaladasaru
-category: सन्स्कृति
+category: sanskruti
 title: ಮೂರು ನಾಮಗಳ ಧರಿಸಿದ ಕಾರಣವೇನು
 date: 2022-10-02 18:46:00 +05:30
 ---

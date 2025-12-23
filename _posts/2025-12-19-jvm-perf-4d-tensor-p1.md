@@ -1,6 +1,6 @@
 ---
 tags: java jvm performance jit benchmark
-category: Programming
+category: programming
 title: "Part 1: Baseline and JIT compilers"
 date: 2025-12-19 00:10:00 +05:30
 ---

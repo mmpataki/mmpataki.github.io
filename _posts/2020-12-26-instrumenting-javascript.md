@@ -1,6 +1,6 @@
 ---
 tags: javascript hack
-category: Programming
+category: programming
 ---
 
 Today I was trying to write a user action recorder for a website of mine. Most of the coding was just adding a bunch of lines to beginning and end of each javascript function so I asked my brother to do it. He is an amateur so he was kind of copy pasting the same code everywhere.

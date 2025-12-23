@@ -19,7 +19,7 @@
     }
 
     .posthead {
-        font-size: 1.5em;
+        font-size: 1.1em;
     }
 
     .postdate {
@@ -38,49 +38,102 @@
 
 <h4>Posts</h4>
 
-{% for post in paginator.posts %}
-<div>
-    <a href="{{post.url | prepend: site.baseurl}}">
-        <span class="posthead">{{post.title}}</span>
-    </a>
-    <div>
-        <span class="postdate">{{post.date | slice: 0, 10}}</span>
-        {% for tag in post.tags %}
-        <code class="smallcode"><a href="/archive?id={{tag}}">{{tag}}</a></code> 
-        {% endfor %}
-    </div>
-</div>
-{{ post.content | strip_html | slice: 0, 250 }}...
-<br />
-<br />
+<style>
+    .category-tabs {
+        display: flex;
+        justify-content: flex-start;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+    }
+    .category-tab {
+        padding: 8px 20px;
+        border: 1px solid #eee;
+        background: #fafafa;
+        margin: 0 2px 5px 0;
+        cursor: pointer;
+        border-radius: 5px 5px 0 0;
+        font-size: 0.85em;
+        font-weight: bold;
+    }
+    .category-tab.active {
+        background: #fff;
+        border-bottom: 1px solid #fff;
+    }
+    .category-content { display: none; }
+    .category-content.active { display: block; }
+</style>
+
+{% comment %}
+Custom category sort order. Specify categories you want first (comma-separated).
+Categories not listed will appear after in alphabetical order.
+Example: "tech,personal,life"
+{% endcomment %}
+{% assign custom_category_order = "programming,ml,sanskruti" | split: "," %}
+
+{% capture all_cats %}{% for cat in site.categories %}{{ cat[0] }},{% endfor %}{% endcapture %}
+{% assign all_categories_sorted = all_cats | split: "," | sort %}
+{% assign sorted_categories = "" | split: "," %}
+
+{% for cat_name in custom_category_order %}
+    {% if cat_name != "" %}
+        {% assign sorted_categories = sorted_categories | push: cat_name %}
+    {% endif %}
 {% endfor %}
 
-<br/>
-
-<!-- pagination -->
-{% if paginator.total_pages > 1 %}
-<div class="pagination">
-    {% if paginator.previous_page %}
-    <a href="{{ paginator.previous_page_path | prepend: site.baseurl | replace: '//', '/' }}">&laquo; Prev</a>
-    {% else %}
-    <span>&laquo; Prev</span>
+{% for cat_name in all_categories_sorted %}
+    {% if cat_name != "" %}
+        {% unless sorted_categories contains cat_name %}
+            {% assign sorted_categories = sorted_categories | push: cat_name %}
+        {% endunless %}
     {% endif %}
+{% endfor %}
 
-    {% for page in (1..paginator.total_pages) %}
-    {% if page == paginator.page %}
-    <span>{{ page }}</span>
-    {% elsif page == 1 %}
-    <a href="/">{{ page }}</a>
-    {% else %}
-    <a
-        href="{{ site.paginate_path | prepend: site.baseurl | replace: '//', '/' | replace: ':num', page }}">{{ page }}</a>
-    {% endif %}
+<div class="category-tabs">
+    {% for cat_name in sorted_categories %}
+        {% assign cat = site.categories[cat_name] %}
+        {% if cat %}
+        <div class="category-tab{% if forloop.first %} active{% endif %}" data-category="cat-{{ cat_name | slugify }}"># {{ cat_name }}</div>
+        {% endif %}
     {% endfor %}
-
-    {% if paginator.next_page %}
-    <a href="{{ paginator.next_page_path | prepend: site.baseurl | replace: '//', '/' }}">Next &raquo;</a>
-    {% else %}
-    <span>Next &raquo;</span>
-    {% endif %}
 </div>
-{% endif %}
+
+{% for cat_name in sorted_categories %}
+    {% assign cat = site.categories[cat_name] %}
+    {% if cat %}
+    <div class="category-content{% if forloop.first %} active{% endif %}" id="cat-{{ cat_name | slugify }}">
+        {% for post in cat %}
+        <div>
+            <a href="{{post.url | prepend: site.baseurl}}">
+                <span class="posthead">{{post.title}}</span>
+            </a>
+            <span class="postdate">{{post.date | slice: 0, 10}}</span>
+            <!-- <div>
+                {% for tag in post.tags %}
+                <code class="smallcode"><a href="/archive?id={{tag}}">{{tag}}</a></code> 
+                {% endfor %}
+            </div> -->
+        </div>
+        <!-- {{ post.content | strip_html | slice: 0, 250 }}...
+        <br />
+        <br /> -->
+        {% endfor %}
+    </div>
+    {% endif %}
+{% endfor %}
+
+<script>
+    // Simple tab switcher
+    document.addEventListener('DOMContentLoaded', function() {
+        var tabs = document.querySelectorAll('.category-tab');
+        var contents = document.querySelectorAll('.category-content');
+        tabs.forEach(function(tab) {
+            tab.addEventListener('click', function() {
+                tabs.forEach(function(t) { t.classList.remove('active'); });
+                contents.forEach(function(c) { c.classList.remove('active'); });
+                tab.classList.add('active');
+                var catId = tab.getAttribute('data-category');
+                document.getElementById(catId).classList.add('active');
+            });
+        });
+    });
+</script>

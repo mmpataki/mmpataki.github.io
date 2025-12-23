@@ -1,6 +1,6 @@
 ---
 tags: guthlee movie review
-category: reviews
+category: random
 title: Guthlee - Laddu
 date: 2024-03-19 22:58:00 +05:30
 ---

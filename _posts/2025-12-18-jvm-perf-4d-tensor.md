@@ -1,6 +1,6 @@
 ---
 tags: java jvm performance jit benchmark
-category: Programming
+category: programming
 title: Taking JVM on a performance ride (4D tensor)
 date: 2025-12-18 08:30:00 +05:30
 ---

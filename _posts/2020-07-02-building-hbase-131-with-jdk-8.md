@@ -3,7 +3,7 @@ layout: post
 title:  "Building Hbase 1.3.1 with JDK 8"
 date:   2020-07-02 11:14:07 +0530
 tags: hbase build jdk8 
-category: Programming
+category: programming
 ---
 
 HBase is a opensource NoSQL store built on top of Hadoop HDFS filesystem. Read more about it [here](https://hbase.apache.org/)

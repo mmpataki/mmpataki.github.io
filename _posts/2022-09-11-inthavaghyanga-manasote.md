@@ -1,6 +1,6 @@
 ---
 tags: krushna lakshmi helavanakatte giriyamma
-category: सन्स्कृति
+category: sanskruti
 title: ಇಂಥವಗ್ಹ್ಯಾಂಗ ಮನಸೋತೆ
 date: 2022-09-11 09:51:00 +05:30
 ---

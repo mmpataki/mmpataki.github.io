@@ -1,5 +1,5 @@
 ---
-category: Programming
+category: programming
 tags: html sanskrit
 title: Sanskrit scripts in HTML
 ---

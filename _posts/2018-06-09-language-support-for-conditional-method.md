@@ -1,7 +1,7 @@
 ---
 title: Language support for conditional method
 tags: java language feature
-category: Programming
+category: programming
 ---
 
 While going through the Hadoop HDFS code, I saw three lines of code repeated everywhere when a debug statement must printed (see below).  

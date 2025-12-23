@@ -33,7 +33,7 @@ plugins:
   - jekyll-feed
   - jekyll-paginate
   - jekyll-seo-tag
-paginate: 8
+paginate: 8000
 
 image:
   path: /images/icons/monkey-upright.png

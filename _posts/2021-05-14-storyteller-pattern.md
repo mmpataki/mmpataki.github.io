@@ -1,7 +1,7 @@
 ---
 title: Storyteller pattern
 tags: programming pattern storyteller
-category: Programming
+category: programming
 ---
 
 This pattern is UI design pattern useful for consuming user inputs (form filling) when type of inputs consumed are depend on other inputs. Here is an example.

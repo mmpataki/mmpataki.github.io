@@ -1,6 +1,6 @@
 ---
 tags: vijayadasru
-category: सन्स्कृति
+category: sanskruti
 title: ವಿಜಯ ಗುರುಗಳಂಘ್ರಿಕಮಲ
 date: 2022-10-01 09:38:00 +05:30
 ---

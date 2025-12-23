@@ -1,6 +1,6 @@
 ---
 tags: jvm jit performance java-agents java
-category: Programming
+category: programming
 ---
 
 So... one day I notice a JVM hanging at the startup in one of our servers. It has not logged anything after it has started. `jstack` showed that the process is executing some `premain` function

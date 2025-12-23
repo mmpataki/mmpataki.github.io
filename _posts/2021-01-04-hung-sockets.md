@@ -1,7 +1,7 @@
 ---
 tags: gdb hack
 title: Hung sockets, Huh?
-category: Programming
+category: programming
 ---
 
 So... you have a process hung on doing some socket operation (which you don't want it to do?)

@@ -1,6 +1,6 @@
 ---
 tags: differential testing fuzzing  regression
-category: readings
+category: programming
 title: Differential testing
 date: 2022-10-29 15:42:00 +05:30
 ---

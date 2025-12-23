@@ -1,6 +1,6 @@
 ---
 tags: linux c
-category: Programming
+category: programming
 title: Linux stdio inheritance
 date: 2025-12-06 17:51:00 +05:30
 ---

@@ -1,7 +1,7 @@
 ---
 title: Java ArrayList vs LinkedList
 tags: programming java lists datastructures
-category: Programming
+category: programming
 ---
 
 The Java `ArrayList` is one of commonly used datastructure. But there can be situations where this can seriously affect your application performance. 

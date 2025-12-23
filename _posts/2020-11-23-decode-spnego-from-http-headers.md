@@ -1,7 +1,7 @@
 ---
 title: Decoding SPNEGO from HTTP headers
 tags: hack spnego kerberos http wireshark
-category: Programming
+category: programming
 ---
 
 Today I was debugging some `SPNEGO` auth issue and didn't have the tcpdump capture... How do I proceed? I noticed that I had the HTTP headers logged by the client (`curl`).
