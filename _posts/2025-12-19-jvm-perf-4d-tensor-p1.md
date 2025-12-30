@@ -7,7 +7,7 @@ date: 2025-12-19 00:10:00 +05:30
 
 Hey!! You kept reading... welcome back!
 
-> <span style="font-size: 0.8em">For those who landed here directly, this is the part 1 of the series - [Taking JVM on a performance ride (4D tensor)]({% post_url 2025-12-18-jvm-perf-4d-tensor %}). I suggest you to take a look at the intro page before reading this.</span>
+> For those who landed here directly, this is the part 1 of the series - [Taking JVM on a performance ride (4D tensor)]({% post_url 2025-12-18-jvm-perf-4d-tensor %}). I suggest you to take a look at the intro page before reading this.
 
 <br>
 

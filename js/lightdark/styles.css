@@ -30,3 +30,19 @@ code, pre {
 .site-title {
     text-decoration: underline;
 }
+
+blockquote {
+    font-size: 0.95em;
+    background-color: antiquewhite;
+    border-left: solid 3px orange;
+    padding: 10px 10px;
+    margin: 20px 0px;
+    color: #444;
+}
+
+img {
+    border: solid 2px #ccc;
+    padding: 10px;
+    margin: 10px;
+    max-width: calc(100% - 42px);
+}
