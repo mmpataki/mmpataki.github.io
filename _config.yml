@@ -26,6 +26,7 @@ baseurl: "" # the subpath of your site, e.g. /blog
 url: "https://mmpataki.github.io" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username: mmpataki
 github_username:  mmpataki
+timezone: Asia/Kolkata
 
 # Build settings
 theme: minima
