@@ -2,7 +2,7 @@
 tags: java jvm performance jit benchmark
 category: programming
 title: "Part 2: JIT disassembly, compressed oops and task pinning in Linux"
-date: 2025-12-31 01:15:00 +05:30
+date: 2025-12-30 23:59:59 +05:30
 ---
 
 Hello!! Welcome back!
