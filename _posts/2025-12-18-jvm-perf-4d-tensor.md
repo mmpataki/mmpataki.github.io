@@ -37,7 +37,8 @@ For this series, we will keep the shape of the tensor to 4 dimensions (4 dimensi
 
 ## Index
 1. [Baseline and JIT compilers]({% post_url 2025-12-19-jvm-perf-4d-tensor-p1 %})
-
+2. [JIT disassembly, compressed oops and task pinning in Linux]({% post_url 2025-12-30-jvm-perf-4d-tensor-p2 %})
+3. [CPU isolation, IRQs and memory-mgmt]({% post_url 2026-01-01-jvm-perf-4d-tensor-p3 %})
 
 <br>
 
