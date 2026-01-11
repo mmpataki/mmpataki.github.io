@@ -1,30 +1,50 @@
 <style>
-ul.share-buttons{
-  list-style: none;
-  padding: 0;
-}
+  ul.share-buttons {
+    list-style: none;
+    padding: 0;
+    margin: 0px;
+  }
 
-ul.share-buttons li{
-  display: inline;
-  margin-right: 10px;
-}
+  ul.share-buttons li {
+    display: inline;
+    margin-right: 10px;
+  }
 
-ul.share-buttons .sr-only{
-  position: absolute;
-  clip: rect(1px 1px 1px 1px);
-  clip: rect(1px, 1px, 1px, 1px);
-  padding: 0;
-  border: 0;
-  height: 1px;
-  width: 1px;
-  overflow: hidden;
-}
+  ul.share-buttons .sr-only {
+    position: absolute;
+    clip: rect(1px 1px 1px 1px);
+    clip: rect(1px, 1px, 1px, 1px);
+    padding: 0;
+    border: 0;
+    height: 1px;
+    width: 1px;
+    overflow: hidden;
+  }
 </style>
-<ul class="share-buttons" data-source="simplesharingbuttons.com">
+<ul class="share-buttons" style="font-size: 24px;">
+
+  <li></li>
+
   <!-- <li><a href="https://www.facebook.com/sharer/sharer.php?u={{site.url}}{{page.url}}&quote={{page.title}}" title="Share on Facebook" target="_blank"><img alt="Share on Facebook" src="/images/simple_icons_black/Facebook.png" /></a></li> -->
-  <li><a href="https://twitter.com/intent/tweet?source={{site.url}}{{page.url}}&text={{page.title}}:%20{{site.url}}{{page.url}}&via={{site.twitter_username}}" target="_blank" title="Tweet"><img alt="Tweet" src="/images/simple_icons_black/Twitter.png" /></a></li>
-  <li><a href="http://www.linkedin.com/shareArticle?mini=true&url={{ site.url }}{{ page.url }}&title={{page.title}}&summary=desc&source={{site.url}}{{page.url}}" target="_blank" title="Share on LinkedIn"><img alt="Share on LinkedIn" src="/images/simple_icons_black/LinkedIn.png" height="25" width="25"/></a></li>
+  <li><a
+      href="https://twitter.com/intent/tweet?source={{site.url}}{{page.url}}&text={{page.title}}:%20{{site.url}}{{page.url}}&via={{site.twitter_username}}"
+      target="_blank" title="Tweet">
+      <!-- <img alt="Tweet" src="/images/simple_icons_black/Twitter.png" /> -->
+      <i class="fa fa-twitter-square" aria-hidden="true"></i>
+    </a></li>
+  <li><a
+      href="http://www.linkedin.com/shareArticle?mini=true&url={{ site.url }}{{ page.url }}&title={{page.title}}&summary=desc&source={{site.url}}{{page.url}}"
+      target="_blank" title="Share on LinkedIn">
+      <i class="fa fa-linkedin-square" aria-hidden="true"></i>
+  </a></li>
   <!-- <li><a href="http://www.reddit.com/submit?url={{site.url}}{{page.url}}&title={{page.title}}" target="_blank" title="Submit to Reddit"><img alt="Submit to Reddit" src="/images/simple_icons_black/Reddit.png" /></a></li> -->
-  <li><a href="whatsapp://send?text={{page.title}}%0d{{site.url}}{{page.url}}" data-action="share/whatsapp/share" target="_blank"> <img alt="Send email" height="21" width="21" src="/images/simple_icons_black/Whatsapp.png" /></a> </li>
-  <li><a href="mailto:?subject={{page.title}}&body={{page.title}}%0d{{site.url}}{{page.url}}" target="_blank" title="Send email"><img alt="Send email" src="/images/simple_icons_black/Email.png" /></a></li>
+  <li><a href="whatsapp://send?text={{page.title}}%0d{{site.url}}{{page.url}}" data-action="share/whatsapp/share"
+      target="_blank"> 
+      <i class="fa fa-whatsapp" aria-hidden="true"></i>
+    </a>
+  </li>
+  <li><a href="mailto:?subject={{page.title}}&body={{page.title}}%0d{{site.url}}{{page.url}}" target="_blank"
+      title="Send email">
+      <i class="fa fa-envelope" aria-hidden="true"></i>
+    </a></li>
 </ul>

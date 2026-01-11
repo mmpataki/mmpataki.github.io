@@ -7,18 +7,38 @@
         async>
 </script> -->
 <div style="margin: 30px;"></div>
-<script src="https://giscus.app/client.js"
-        data-repo="mmpataki/mmpataki.github.io"
-        data-repo-id="MDEwOlJlcG9zaXRvcnkyOTI3NTUyMzY="
-        data-category="General"
-        data-category-id="DIC_kwDOEXMXJM4Cz8dp"
-        data-mapping="pathname"
-        data-strict="0"
-        data-reactions-enabled="1"
-        data-emit-metadata="1"
-        data-input-position="top"
-        data-theme="light"
-        data-lang="en"
-        crossorigin="anonymous"
-        async>
+<div class="giscus"></div>
+<script>
+
+        let giscusTheme = localStorage.getItem("theme") || 'light';
+        let giscusAttributes = {
+                "src": "https://giscus.app/client.js",
+                "data-repo": "mmpataki/mmpataki.github.io",
+                "data-repo-id": "MDEwOlJlcG9zaXRvcnkyOTI3NTUyMzY=",
+                "data-category": "General",
+                "data-category-id": "DIC_kwDOEXMXJM4Cz8dp",
+                "data-mapping": "pathname",
+                "data-reactions-enabled": "1",
+                "data-emit-metadata": "1",
+                "data-input-position": "top",
+                "data-theme": giscusTheme,
+                "data-lang": "en",
+                "crossorigin": "anonymous",
+                "data-strict": "0",
+                "async": "",
+        };
+
+        let giscusScript = document.createElement("script");
+        Object.entries(giscusAttributes).forEach(([key, value]) => giscusScript.setAttribute(key, value));
+        document.body.appendChild(giscusScript);
+
+        // call when theme changes
+        function changeGiscusTheme(theme) {
+                function sendMessage(message) {
+                        const iframe = document.querySelector('iframe.giscus-frame');
+                        if (!iframe) return;
+                        iframe.contentWindow.postMessage({ giscus: message }, 'https://giscus.app');
+                }
+                sendMessage({ setConfig: { theme: theme } });
+        }
 </script>

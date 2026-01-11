@@ -28,6 +28,12 @@ twitter_username: mmpataki
 github_username:  mmpataki
 timezone: Asia/Kolkata
 
+# Navigation
+header_pages:
+  - about.markdown
+  - apps.md
+  - tags.md
+
 # Build settings
 theme: minima
 plugins:
