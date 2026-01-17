@@ -5,7 +5,7 @@ layout: default
 <script src="https://use.fontawesome.com/104ccf5067.js"></script>
 {% include ga.html %}
 
-<h1> {{ page.title }} </h1>
+<h1 style="margin-top: 0px"> {{ page.title }} </h1>
 
 <i class="fa fa-clock-o" aria-hidden="true"></i>
 &nbsp;

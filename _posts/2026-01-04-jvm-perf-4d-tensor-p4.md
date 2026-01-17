@@ -1,5 +1,5 @@
 ---
-tags: java jvm performance jit benchmark
+tags: linux performance intel benchmark
 category: programming
 title: "Part 4: CPU temperature, frequency and MSRs"
 date: 2026-01-17 14:02:00 +05:30
@@ -163,9 +163,7 @@ msr                    12288  0
 
 # install the tools
 $ sudo apt install cpufrequtils
-```
 
-```
 # print the actual performance of core 11
 $ sudo cpufreq-aperf -c 11
 CPU Average freq(KHz)  Time in C0      Time in Cx      C0 percentage

@@ -1,5 +1,5 @@
 ---
-title: tagcloud
+title: archive
 permalink: /archive/
 ---
 
