@@ -1,5 +1,5 @@
 ---
-tags: java jvm performance jit benchmark
+tags: java jvm performance benchmark linux
 category: programming
 title: "Part 3: CPU isolation, IRQs and memory-mgmt"
 date: 2026-01-01 23:00:00 +05:30

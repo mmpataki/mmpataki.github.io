@@ -1,6 +1,19 @@
-html, body, pre, code, div, .highlight, .highlighter-rouge, language-html {
-    /* background-color: black;
-    color: white; */
+* {
+      /* font-family: "Roboto", sans-serif; */
+
+      /* font-family: "Open Sans", sans-serif; */
+
+    font-family: 'Poppins', sans-serif;
+    font-weight: lighter;
+}
+
+blockquote {
+    letter-spacing: normal;
+}
+
+html, body, head {
+    margin: 0px;
+    padding: 0px;
 }
 
 h1 {
@@ -8,11 +21,22 @@ h1 {
 }
 
 code, pre {
-    font-family: 'Jetbrains Mono' 'Cascadia Mono' monospace;
-    font-size: 13px;
+    font-family: monospace;
     border: none;
+    font-size: 0.9em;
 }
 
+.highlight > code {
+    font-size: 13px;
+}
+
+strong {
+    font-weight: bold;
+}
+
+p{
+    margin-bottom: 20px;
+}
 
 .highlighter-rouge .highlight, code, pre {
     background-color: #f9f8f9;
@@ -55,37 +79,8 @@ img {
     border: none;
     padding: 0;
     margin: 10px;
-    max-width: 100%;
-}
-
-/* Keep borders only for images inside post content (posts have .postpage-date or .readtime) */
-.postpage-date ~ * img,
-.readtime ~ * img,
-.postpage-tag ~ * img {
-    border: solid 2px #ccc;
-    padding: 10px;
-    margin: 10px;
-    max-width: calc(100% - 42px);
-}
-
-/* Also target images that come after h1 in posts */
-.page-content h1 ~ * img {
-    border: solid 2px #ccc;
-    padding: 10px;
-    margin: 10px;
-    max-width: calc(100% - 42px);
-}
-
-/* Exclude specific image types from borders */
-header img,
-nav img,
-.share-buttons img,
-.site-header img,
-.topimage img,
-.bottomimage img,
-.site-nav img {
-    border: none !important;
-    padding: 0 !important;
+    max-width: calc(100% - 22px);
+    min-width: auto;
 }
 
 /* Theme Toggle Button Styles - match page-link styling exactly */
@@ -269,32 +264,10 @@ nav img,
 }
 
 /* Dark mode: remove borders from non-post images */
-[data-theme="dark"] img {
-    border: none;
+[data-theme="dark"] bordered-img {
+    border: solid 1px #eee;
     opacity: 0.9;
 }
-
-/* Dark mode: keep borders only for post images */
-[data-theme="dark"] .postpage-date ~ * img,
-[data-theme="dark"] .readtime ~ * img,
-[data-theme="dark"] .postpage-tag ~ * img,
-[data-theme="dark"] .page-content h1 ~ * img {
-    border: solid 2px #555;
-    opacity: 0.9;
-}
-
-/* Exclude specific image types from borders in dark mode */
-[data-theme="dark"] header img,
-[data-theme="dark"] nav img,
-[data-theme="dark"] .share-buttons img,
-[data-theme="dark"] .site-header img,
-[data-theme="dark"] .topimage img,
-[data-theme="dark"] .bottomimage img,
-[data-theme="dark"] .site-nav img {
-    border: none !important;
-    padding: 0 !important;
-}
-
 
 [data-theme="dark"] .postpage-tag {
     background-color: #2d2d2d;
@@ -335,6 +308,7 @@ body {
 .site-header {
     margin-top: 0;
     margin-bottom: 0;
+    border-top: none;
 }
 
 /* Dark mode styles for category tabs */
