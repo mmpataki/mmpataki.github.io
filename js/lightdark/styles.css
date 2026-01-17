@@ -223,10 +223,11 @@ img {
 [data-theme="dark"] a:visited {
     color: #9d7cff;
 }
+*/
 
 [data-theme="dark"] a:hover {
-    color: #8cc8ff;
-} */
+    color: orangered;
+}
 
 /* Ensure .posthead text inherits the link color */
 [data-theme="dark"] .posthead {
