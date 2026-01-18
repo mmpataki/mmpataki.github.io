@@ -1,27 +1,37 @@
 ---
 layout: page
-title: about
+title: about me
 permalink: /about/
 ---
 
-I am an engineer at Informatica (from Salesforce). I like problem-solving, programming and exploring the tech. These are my current interests
+I am an engineer at Informatica (from Salesforce). I like problem-solving, programming and exploring stuff online. 
+
+
+My interests keep changing over time, these are the current ones...
 
 - Deep Learning (just started)
 - Distributed systems
-- Operating systems
+- Linux
+- Programming Languages
 - Datastructures and Algorithms
 - Robotics
+- Cybersecurity (I do basic CTF challenges)
+
 
 <br>
 
-#### My work
-- [car](https://github.com/mmpataki/car) : A distributed log processing & dashboarding system
+#### My work (public)
+- [a blog series]({% post_url 2025-12-18-jvm-perf-4d-tensor %}) - exploring jvm performance
+- [car](https://github.com/mmpataki/car) : distributed log processing & dashboarding system
+- [mstc](https://github.com/mmpataki/mstc) : msteams cli client (vibe-coded)
 - [other work](https://github.com/mmpataki)
+- [some stupid webpages](/apps)
 
+<br>
 
-#### Connect with me
-- [X (twitter)](https://x.com/mmpataki)
-- [LinkedIn](https://www.linkedin.com/in/madhusoodan-pataki)
+#### Contact me
+- [x.com (twitter)](https://x.com/mmpataki)
+- [linkedin](https://www.linkedin.com/in/madhusoodan-pataki)
 
 
 

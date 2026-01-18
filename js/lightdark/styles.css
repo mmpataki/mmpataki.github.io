@@ -2,30 +2,40 @@
     font-family: 'Poppins', sans-serif, monospace;
 }
 
-[data-theme="dark"] * {
-    font-weight: lighter;
-}
-
 blockquote {
     letter-spacing: normal;
 }
 
-html, body, head {
+html,
+body,
+head {
     margin: 0px;
     padding: 0px;
+}
+
+.page-content {
+    padding-top: 0;
+}
+
+.site-header {
+    margin-top: 0;
+    margin-bottom: 0;
+    border-top: none;
 }
 
 h1 {
     margin-top: 25px;
 }
 
-code, pre, .highlight * {
+code,
+pre,
+.highlight * {
     font-family: "Jetbrains Mono", "Cascadia Mono", monospace !important;
     border: none;
     font-size: 0.9em;
 }
 
-.highlight > code {
+.highlight>code {
     font-size: 1em;
 }
 
@@ -33,30 +43,31 @@ strong {
     font-weight: bold;
 }
 
-p{
+p {
     margin-bottom: 20px;
 }
 
-.highlighter-rouge .highlight, code, pre {
-    background-color: #f9f8f9;
-}
-
-
-.readtime, .fa, .postpage-tag, .postpage-date {
+.readtime,
+.fa,
+.postpage-date {
     font-size: 0.85em;
 }
 
 .postpage-tag {
     font-size: 0.8em;
     font-weight: bold;
-    border: 1px solid #e0e0e0;
 }
+
+.highlighter-rouge {
+    margin: 25px 0px;
+}
+
 
 .wrapper {
     max-width: 900px;
 }
 
-.page-content > .wrapper {
+.page-content>.wrapper {
     padding-top: 25px;
 }
 
@@ -70,14 +81,10 @@ p{
 
 blockquote {
     font-size: 0.95em;
-    background-color: antiquewhite;
-    border-left: solid 3px orange;
     padding: 10px 10px;
     margin: 20px 0px;
-    color: #444;
 }
 
-/* Remove borders from all images by default */
 img {
     border: none;
     padding: 0;
@@ -85,6 +92,248 @@ img {
     max-width: calc(100% - 22px);
     min-width: auto;
 }
+
+::-webkit-scrollbar {
+    width: 2px;
+    height: 2px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: rgba(155, 155, 155, 0.5);
+    border-radius: 20px;
+    border: transparent;
+}
+
+.site-nav .theme-toggle.page-link:hover {
+    opacity: 0.8;
+}
+
+.site-nav .theme-toggle.page-link:focus {
+    outline: 2px solid currentColor;
+    outline-offset: 2px;
+    border-radius: 4px;
+}
+
+.theme-icon {
+    display: inline;
+    width: 18px;
+    height: 18px;
+    stroke-width: 2;
+    vertical-align: baseline;
+    margin: 0;
+    padding: 0;
+}
+
+.highlight {
+    margin: 0px;
+}
+
+.highlighter-rouge>.highlight {
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+}
+
+
+/* home page categories */
+.category-tabs {
+    display: flex;
+    justify-content: flex-start;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.category-tab {
+    padding: 8px 10px;
+    margin: 0 2px 5px 0;
+    cursor: pointer;
+    border-radius: 5px 5px 0 0;
+    font-size: 0.75em;
+    font-weight: bold;
+}
+
+.category-content {
+    display: none;
+}
+
+.category-content.active {
+    display: block;
+}
+
+.category-content>div {
+    display: flex;
+    align-items: baseline;
+}
+
+.category-content .posthead {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    max-width: 100%;
+    flex: 1;
+}
+
+.postdate {
+    margin-left: 5px;
+    margin-right: 5px;
+    float: right;
+    vertical-align: bottom;
+    font-size: 0.9em;
+}
+
+
+/* colors */
+
+/* light theme */
+
+.site-header {
+    box-shadow: 1px -5px 15px seagreen;
+}
+
+.highlighter-rouge .highlight,
+code,
+pre {
+    background-color: #f9f8f9;
+}
+
+.highlighter-rouge>.highlight {
+    border: 1px solid #e0e0e0;
+}
+
+.postpage-tag {
+    border: 1px solid #e0e0e0;
+}
+
+blockquote {
+    background-color: antiquewhite;
+    border-left: solid 3px orange;
+    color: #444;
+}
+
+.category-tab {
+    border: 1px solid #eee;
+    background: #fafafa;
+}
+
+.category-tab.active {
+    background: #fff;
+    border-bottom: 1px solid #fff;
+}
+
+.postdate {
+    color: gray;
+}
+
+.tagcloud-selected {
+    background: #606dbc;
+    color: white
+}
+
+
+
+[data-theme="dark"] {
+    * {
+        /* font-weight: lighter; */
+        color: #bbb;
+    }
+
+    .site-header {
+        box-shadow: 1px -5px 20px darkslateblue;
+        background-color: #1a1a1a;
+        border-bottom: 1px solid #333;
+    }
+
+    .postpage-tag {
+        background-color: #2d2d2d;
+        color: #b0b0b0;
+        border: 1px solid #404040;
+    }
+
+    body {
+        background-color: #1a1a1a;
+    }
+
+    blockquote {
+        background-color: #2a2419;
+        border-left: solid 3px #ff8c00;
+        color: #e0d0b0;
+    }
+
+    .site-title,
+    .site-title:visited {
+        color: #e0e0e0;
+    }
+
+    .page-link {
+        color: #b0b0b0;
+    }
+
+    .page-link:hover {
+        color: #e0e0e0;
+    }
+
+    .post-content,
+    .page-content {
+        color: #e0e0e0;
+    }
+
+    hr {
+        border-color: #444;
+    }
+
+    .highlighter-rouge>.highlight {
+        border: 1px solid #404040;
+    }
+
+    .highlighter-rouge .highlight,
+    code,
+    pre {
+        background-color: #2d2d2d;
+    }
+
+    h4 {
+        color: #e0e0e0;
+    }
+
+    .category-tab {
+        background: #2d2d2d;
+        border: 1px solid #444;
+        color: #e0e0e0;
+    }
+
+    .category-tab:hover {
+        background: #3a3a3a;
+        color: #fff;
+    }
+
+    .category-tab.active {
+        background: #1a1a1a;
+        border-bottom: 1px solid #1a1a1a;
+        color: #fff;
+    }
+
+    a {
+        color: #6ab7ff;
+    }
+
+    a:hover {
+        color: #8cc8ff;
+    }
+
+    .postdate {
+        color: #999;
+    }
+
+    .tagcloud-selected {
+        background: #606dbc;
+        color: white
+    }
+}
+
 
 /* Theme Toggle Button Styles - match page-link styling exactly */
 .site-nav .theme-toggle.page-link {
@@ -108,26 +357,6 @@ img {
     z-index: 1;
 }
 
-.site-nav .theme-toggle.page-link:hover {
-    opacity: 0.8;
-}
-
-.site-nav .theme-toggle.page-link:focus {
-    outline: 2px solid currentColor;
-    outline-offset: 2px;
-    border-radius: 4px;
-}
-
-.theme-icon {
-    display: inline;
-    width: 18px;
-    height: 18px;
-    stroke-width: 2;
-    vertical-align: baseline;
-    margin: 0;
-    padding: 0;
-}
-
 /* Make theme toggle work in mobile - position it left of menu button */
 @media screen and (max-width: 600px) {
     .site-nav .theme-toggle.page-link {
@@ -146,7 +375,7 @@ img {
         text-align: center;
         vertical-align: middle;
     }
-    
+
     .site-nav .theme-toggle.page-link .theme-icon {
         pointer-events: none;
         vertical-align: middle;
@@ -159,136 +388,37 @@ img {
         background-color: #2d2d2d !important;
         border: 1px solid #555 !important;
     }
-    
-    [data-theme="dark"] .site-nav .menu-icon > svg {
+
+    [data-theme="dark"] .site-nav .menu-icon>svg {
         fill: #e0e0e0 !important;
     }
-    
+
     [data-theme="dark"] .site-nav .page-link {
         color: #b0b0b0;
     }
-    
+
     [data-theme="dark"] .site-nav .page-link:hover {
         color: #e0e0e0;
     }
-    
+
     [data-theme="dark"] .site-nav .trigger {
         background-color: #2d2d2d;
     }
-    
+
     /* Dark mode theme toggle in mobile */
     [data-theme="dark"] .site-nav .theme-toggle.page-link {
         color: #b0b0b0;
     }
-    
+
     [data-theme="dark"] .site-nav .theme-toggle.page-link:hover {
         color: #e0e0e0;
     }
 }
 
-/* Dark Theme Styles */
-[data-theme="dark"] {
-    color-scheme: dark;
-}
 
-[data-theme="dark"] body {
-    background-color: #1a1a1a;
-    color: #e0e0e0;
-}
-
-[data-theme="dark"] .site-header {
-    background-color: #1a1a1a;
-    border-bottom: 1px solid #333;
-}
-
-[data-theme="dark"] .site-title,
-[data-theme="dark"] .site-title:visited {
-    color: #e0e0e0;
-}
-
-[data-theme="dark"] .page-link {
-    color: #b0b0b0;
-}
-
-[data-theme="dark"] .page-link:hover {
-    color: #e0e0e0;
-}
-
-[data-theme="dark"] .post-content,
-[data-theme="dark"] .page-content {
-    color: #e0e0e0;
-}
-
-/* Only apply custom link colors to post content, not home page or regular pages */
-/* [data-theme="dark"] a {
-    color: orangered;
-}
-
-[data-theme="dark"] a:visited {
-    color: #9d7cff;
-}
-*/
-
-[data-theme="dark"] a:hover {
-    color: orangered;
-}
-
-/* Ensure .posthead text inherits the link color */
-[data-theme="dark"] .posthead {
-    color: inherit;
-}
-
-/* But override for post pages - use the post-specific link colors */
-[data-theme="dark"] .highlighter-rouge .highlight,
-[data-theme="dark"] code,
-[data-theme="dark"] pre {
-    background-color: #2d2d2d;
-    color: #f8f8f2;
-}
-
-.highlighter-rouge .highlight {
-    border: none;
-    margin: 0px;
-}
-
-.highlighter-rouge > .highlight {
-    border: 1px solid #e0e0e0;
-    margin: 15px 0px;
-    border-radius: 5px;
-}
-
-[data-theme="dark"] .highlighter-rouge > .highlight {
-    border: 1px solid #404040;
-}
-
-[data-theme="dark"] blockquote {
-    background-color: #2a2419;
-    border-left: solid 3px #ff8c00;
-    color: #e0d0b0;
-}
-
-/* Dark mode: remove borders from non-post images */
 [data-theme="dark"] bordered-img {
     border: solid 1px #eee;
     opacity: 0.9;
-}
-
-[data-theme="dark"] .postpage-tag {
-    background-color: #2d2d2d;
-    color: #b0b0b0;
-    border: 1px solid #404040;
-}
-
-[data-theme="dark"] .postpage-tag a {
-    color: #6ab7ff;
-}
-
-[data-theme="dark"] hr {
-    border-color: #444;
-}
-
-[data-theme="dark"] .post-meta {
-    color: #b0b0b0;
 }
 
 /* Ensure theme icon matches page-link color in dark mode */
@@ -297,90 +427,5 @@ img {
 }
 
 [data-theme="dark"] .site-nav .theme-toggle.page-link:hover {
-    color: #e0e0e0;
-}
-
-/* Fix top margin issue */
-body {
-    margin-top: 0;
-}
-
-.page-content {
-    padding-top: 0;
-}
-
-.site-header {
-    margin-top: 0;
-    margin-bottom: 0;
-    border-top: none;
-}
-
-/* Dark mode styles for category tabs */
-[data-theme="dark"] .category-tab {
-    background: #2d2d2d;
-    border: 1px solid #444;
-    color: #e0e0e0;
-}
-
-[data-theme="dark"] .category-tab:hover {
-    background: #3a3a3a;
-    color: #fff;
-}
-
-[data-theme="dark"] .category-tab.active {
-    background: #1a1a1a;
-    border-bottom: 1px solid #1a1a1a;
-    color: #fff;
-}
-
-/* Dark mode styles for pagination */
-[data-theme="dark"] .pagination a,
-[data-theme="dark"] .pagination span {
-    background-color: #2d2d2d;
-    border: 1px solid #444;
-    color: #e0e0e0;
-}
-
-[data-theme="dark"] .pagination a:hover {
-    background-color: #3a3a3a;
-    color: #fff;
-}
-
-/* Post listing links - prevent wrapping with ellipsis */
-.category-content > div {
-    display: flex;
-    align-items: baseline;
-}
-
-.category-content > div > a {
-    flex: 1;
-    min-width: 0;
-    margin-right: 15px;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-.posthead {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    max-width: 100%;
-}
-
-/* Dark mode styles for post elements */
-[data-theme="dark"] .category-content a {
-    color: #6ab7ff;
-}
-
-[data-theme="dark"] .category-content a:hover {
-    color: #8cc8ff;
-}
-
-[data-theme="dark"] .postdate {
-    color: #999;
-}
-
-[data-theme="dark"] h4 {
     color: #e0e0e0;
 }

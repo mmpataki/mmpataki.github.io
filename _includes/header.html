@@ -28,11 +28,9 @@
         {%- assign about_page = site.pages | where: "permalink", "/about/" | first -%}
         {%- assign apps_page = site.pages | where: "permalink", "/apps/" | first -%}
         {%- assign archive_page = site.pages | where: "permalink", "/archive/" | first -%}
+        <a class="page-link" href="/">home</a>
         {%- if about_page -%}
         <a class="page-link" href="{{ about_page.url | relative_url }}">{{ about_page.title | escape }}</a>
-        {%- endif -%}
-        {%- if apps_page -%}
-        <a class="page-link" href="{{ apps_page.url | relative_url }}">{{ apps_page.title | escape }}</a>
         {%- endif -%}
         {%- if archive_page -%}
         <a class="page-link" href="{{ archive_page.url | relative_url }}">{{ archive_page.title | escape }}</a>

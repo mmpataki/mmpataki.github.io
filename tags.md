@@ -23,7 +23,7 @@ permalink: /archive/
 
 <br/>
 
-<div id="selectedtags"></div>
+<div><strong id="selectedtags"></strong></div>
 <br/>
 <ol style="list-style-type: none;" id="selectedurls"></ol>
 
@@ -96,15 +96,18 @@ permalink: /archive/
     }
     Object.values(tmp).forEach(p => urls.add(p))
 
+    /* selected tags */
+    let selectedTags = Object.entries(tags).filter(([k, t]) => t.selected).map(e => e[0])
+
     var selectedtags = document.getElementById("selectedtags");
-    selectedtags.innerHTML = "";
+    selectedtags.innerHTML = selectedTags.length > 0 ? "Blog with tags: " : "All articles (select a tag above to filter)";
     var selectedurls = document.getElementById("selectedurls");
     selectedurls.innerHTML = "";
 
     for(tagName in tags) {
       var tag = tags[tagName]
       if(tag.selected) {
-        selectedtags.innerHTML += `<code style="background-color: lightgreen">${tagName}</code> `;
+        selectedtags.innerHTML += `<code class="tagcloud-selected">${tagName}</code> `;
         urls = new Set(tag.pages.filter(
           function (u) {
             var ua = [...urls];
@@ -119,9 +122,9 @@ permalink: /archive/
 
     let html = "", lastDate = "";
     [...urls]
-      .sort((u1, u2) => toDate(u1.pdate) < toDate(u2.pdate))
+      .sort((u1, u2) => +toDate(u2.pdate) - +toDate(u1.pdate))
       .forEach(u => {
-        console.log(toDate(u.pdate))
+        console.log(u.pdate)
         if(getBlogPeriod(lastDate) != getBlogPeriod(u.pdate)) {
           html += `${lastDate == "" ? "" : "<br/></ul>"}<li><i class="date">${getBlogPeriod(u.pdate)}</i><ul style="list-style-type: none;">`
         }
@@ -142,8 +145,9 @@ permalink: /archive/
     document.getElementById("tagcloud").innerHTML = "";
     for(tag in tags) {
       var pages = tags[tag].pages;
+      if(+pages.length < 2) continue
       document.getElementById("tagcloud").innerHTML += `
-        <code style="background-color: ${tags[tag].selected ? "skyblue": "defcol"}; font-size: ${12 + 4 * pages.length}px;" title="${pages.length} post${pages.length > 1 ? "s":""}" onclick="tagClicked('${tag}')">${tag}<sup>(${pages.length})</sup></code>
+        <code class="${tags[tag].selected ? "tagcloud-selected" : "tagcloud"}" style="font-size: ${12 + 2 * pages.length}px;" title="${pages.length} post${pages.length > 1 ? "s":""}" onclick="tagClicked('${tag}')">${tag}<sup>(${pages.length})</sup></code>
       `;
     }
   }
