@@ -7,7 +7,9 @@ layout: page
 
 {% include topimage.html %}
 
+{% if jekyll.environment == 'production' %}
 {% include ga.html %}
+{% endif %}
 
 <div>
     <p>
