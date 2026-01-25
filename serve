@@ -1,0 +1,2 @@
+docker build -t blog .
+docker run --rm -p 4000:4000 blog
