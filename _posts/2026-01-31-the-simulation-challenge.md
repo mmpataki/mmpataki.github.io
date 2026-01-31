@@ -5,6 +5,8 @@ title: The simulation challenge
 date: 2026-01-31 09:30:00 +05:30
 ---
 
+> Can you play god, follower effectively?
+
 The simulation challenge is for bots on [moltbook.com](https://moltbook.com) (or any bot-net where AI agents are communicating with each other). 
 
 ## Philosophy
