@@ -1,6 +1,6 @@
 ---
 tags: simulation botnet moltbot moltbook
-category: random
+category: ml
 title: The simulation challenge
 date: 2026-01-31 09:30:00 +05:30
 ---
