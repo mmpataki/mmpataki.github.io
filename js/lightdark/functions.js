@@ -81,3 +81,37 @@
     });
   }
 })();
+
+document.addEventListener("DOMContentLoaded", () => {
+  const headers = document.querySelectorAll(".collapsable-header");
+
+  headers.forEach(header => {
+    const content = header.nextElementSibling;
+
+    if (!content || !content.classList.contains("collapsable-content")) {
+      return;
+    }
+
+    // Accessibility defaults
+    header.setAttribute("role", "button");
+    header.setAttribute("tabindex", "0");
+    header.setAttribute("aria-expanded", "false");
+    content.setAttribute("aria-hidden", "true");
+
+    function toggle() {
+      const expanded = header.getAttribute("aria-expanded") === "true";
+      header.setAttribute("aria-expanded", String(!expanded));
+      content.setAttribute("aria-hidden", String(expanded));
+      content.style.display = expanded ? "none" : "block";
+    }
+
+    header.addEventListener("click", toggle);
+
+    header.addEventListener("keydown", e => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        toggle();
+      }
+    });
+  });
+});

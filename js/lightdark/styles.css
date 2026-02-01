@@ -27,6 +27,14 @@ h1 {
     margin-top: 25px;
 }
 
+h2, h3 {
+    margin-top: 35px;
+}
+
+h4, h5 {
+    margin-top: 30px;
+}
+
 code,
 pre,
 .highlight * {
@@ -186,6 +194,48 @@ img {
 }
 
 
+details.collapsable {
+    margin: 30px 0;
+    border-radius: 6px;
+    overflow: hidden;
+    padding: 0px;
+    box-shadow: 1px 0px 10px seagreen;
+}
+
+/* header */
+details.collapsable > summary {
+    /* padding: 10px; */
+    font-weight: 600;
+    /* font-size: 1.05em; */
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    list-style: none;
+    padding: 10px;
+}
+
+details.collapsable > div {
+    padding: 5px 15px;
+}
+
+details.collapsable > summary::-webkit-details-marker {
+    display: none;
+}
+
+/* arrow */
+details.collapsable > summary::before {
+    content: "▸";
+    font-size: 0.9em;
+    transition: transform 0.2s ease;
+}
+
+details.collapsable[open] > summary::before {
+    transform: rotate(90deg);
+}
+
+
 /* colors */
 
 /* light theme */
@@ -233,7 +283,10 @@ blockquote {
     color: white
 }
 
-
+details.collapsable {
+    border: 1px solid #e0e0e0;
+    background: #fafafa;
+}
 
 [data-theme="dark"] {
     * {
@@ -332,6 +385,39 @@ blockquote {
         background: #606dbc;
         color: white
     }
+
+    details.collapsable {
+        background: #242424;
+        border: 1px solid #404040;
+    }
+
+    table {
+        background-color: #1a1a1a;      /* same as body */
+        color: #e0e0e0;                 /* main text */
+        border-radius: 5px;
+        border-collapse: collapse;
+    }
+
+    table thead th {
+        color: #e0e0e0;
+        font-weight: 600;
+        border-bottom: 1px solid #404040;
+        background-color: #2a2a2a;
+    }
+
+    th, td {
+        border: 1px solid #404040;      /* consistent with code blocks */
+        padding: 10px 12px;
+    }
+
+    table tbody tr:nth-child(even) {
+        background-color: #1e1e1e;      /* same as code/pre background */
+    }
+
+    table td:not(:first-child) {
+        font-variant-numeric: tabular-nums;
+    }
+
 }
 
 

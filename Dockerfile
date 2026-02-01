@@ -3,7 +3,7 @@ FROM jekyll/jekyll
 WORKDIR /srv/jekyll
 
 # Copy only dependency manifests first (layer caching)
-COPY Gemfile Gemfile.lock ./
+COPY Gemfile ./
 
 RUN bundle install
 
@@ -12,4 +12,4 @@ COPY . .
 
 EXPOSE 4000
 
-CMD ["bundle", "exec", "jekyll", "serve", "--watch", "--force_polling", "--host", "0.0.0.0", "--destination", "/tmp/_site"]
+CMD ["bundle", "exec", "jekyll", "serve", "--watch", "--force_polling", "--incremental", "--host", "0.0.0.0", "--destination", "/tmp/_site"]
