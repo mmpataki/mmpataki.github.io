@@ -11,6 +11,16 @@ Ahoy there! Welcome to part 5 of this series.
 
 This is a surprise episode where I abandon my powerful (cough) laptop and run the benchmark on my [Moto Edge 40 Neo](https://www.gsmarena.com/motorola_edge_40_neo-12467.php) phone which has a MediaTek dimnesity 7030 with 12G RAM.
 
+
+## TL;DR
+In this episode
+- We explore the CPUs available in my smartphone (ARM A78, A55 clusters)
+- Try to figure out why A78 outperforms by i7
+- Compare the micro-architectures
+
+
+## Setup on the phone
+
 To get the binaries set up for running my benchmark, I am using a Android app named [Termux](https://wiki.termux.com/) from playstore and installed below packages. It also allows me [SSH in to the my phone](https://wiki.termux.com/wiki/Remote_Access). `adb shell` (from android platform tools) is also a good option.
 
 - openjdk-25-x
@@ -238,10 +248,12 @@ Processors have duplicated modules to handle similar uOps.
 ### Out of order execution
 Processors run the instructions in a order different than program order. This reduces the number of pipeline stalls. In some systems compilers and processors work together to achieve this goal.
 
+### Branch prediction
+Instructions fed to processor are not linear (one after the other) because of branch instructions. These cause **branch** hazards. Processors don't wait till they get the result of the condition evaluation, instead they try to predict the branch direction and continue with pipelining the instructions. When the direction taken is incorrect, the results of the branch are flushed away.
+
 ### Few terms
 * **Front-end** : The part of the processor which fetches, decodes and keeps the instructions ready for execution.
 * **Back-end** : The part of the processor which executes the instruction and commits the results.
-
 
 ### Comparison of Cortex-A78 and i7-9750
 
@@ -257,10 +269,13 @@ Processors run the instructions in a order different than program order. This re
 | **float ALUs**     | 2 ALUs | 2 ALU pipelines | 2 (256 bit wide) |
 
 
-### Conclusions
-- Depth of i7 pipeline is quite high, it might look more parallel, but any missed branch prediction can cause the complete pipeline flush.
+### Some notes
+- Depth of i7 pipeline is quite high, it might look more parallel, but any missed branch prediction can cause the results of the pipeline to be flushed.
 - Cortex A78 has a little wider pipeline (2 extra ALUs)
 - Cortex A78 has bigger L1 cache which can reduce stalls.
+
+### Conclusion
+Even with lower clock rate the ARM's A78 cluster outperformed the desktop i7-9750 in this particular benchmark because of its architectural design.
 
 
 ### Work in progress
