@@ -19,6 +19,13 @@ layout: page
 
 <br />
 
+<div>
+    {% capture my_markdown_content %}{% include featured.md %}{% endcapture %}
+    {{ my_markdown_content | markdownify }}
+</div>
+
+<br/>
+
 <div style="width: 100%; min-height: 300px;">
 {% include pagination.html %}
 </div>
