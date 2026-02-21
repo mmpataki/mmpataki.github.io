@@ -8,8 +8,6 @@ date: 2025-12-18 08:30:00 +05:30
 
 This is a series of mad hunt (exploration) for performance (throughput) with JVM using a 4D tensor as an example. The idea is to explore options available and limits in JVM for performance tuning of a silly application.
 
-<br>
-
 ## Objective of this exploration
 - Implement a 4D tensor with optimized element access.
 	- This basic optimization can improve the performance of other operations on this tensor
@@ -22,12 +20,10 @@ This is a series of mad hunt (exploration) for performance (throughput) with JVM
 	- ...
 - Since Java is a robust, hybrid (interpreted / compiled) language, performance won't be comparable to C / C++. So we are just trying to push the boundaries of Java implementation.
 
-<br>
 
 > **Background**  
 > It all started when I was implementing a CNN (LeNet) in Java for exploring ML basics. I started with C -- missed classes, went to C++ -- realized I had forgotten the syntax and finally ended up with Java (which is my go-to PL rn).
 
-<br>
 
 ## Elephant in the room : what is a 4D tensor?
 For this series, we will keep the definition of tensor simple. If you are aware of scalars, vectors & matrices, tensor is a generalization of these ideas to more dimensions. For others consider it as a multi-dimensional array.
@@ -41,14 +37,12 @@ For this series, we will keep the shape of the tensor to 4 dimensions (4 dimensi
 3. [CPU isolation, IRQs and memory-mgmt]({% post_url 2026-01-01-jvm-perf-4d-tensor-p3 %})
 4. [CPU temperature, frequency and MSRs]({% post_url 2026-01-04-jvm-perf-4d-tensor-p4 %})
 5. [My superfast right ARM, the phone]({% post_url 2026-01-23-jvm-perf-4d-tensor-p5 %})
+6. [Memory (TLB)]({% post_url 2026-02-21-jvm-perf-4d-tensor-p6 %})
 
-<br>
 
 ## Source code and results
 All code and results can be found in my Github - [mmpataki/tensor.benchmark](https://github.com/mmpataki/tensor.benchmark)
 
-
-<br>
 
 ## For Java experts
 I am a novice Java programmer trying to explore the limits of Java. Suggestions, directions are very much welcome. You can hit me up on
@@ -58,8 +52,6 @@ I am a novice Java programmer trying to explore the limits of Java. Suggestions,
 - [X (twitter)](https://x.com/mmpataki)
 - Email - akshayapataki123 AT gmail DOT com
 
-
-<br>
 
 ## My Machine, OS, JDK
 
