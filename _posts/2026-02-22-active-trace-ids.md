@@ -92,6 +92,13 @@ Destination rules in service meshes like `istio` can be configured to forward th
 ## Support from application side
 To make this work, the application interfaces like UI should provide a debug mode / users need to install a plugin (browser plugin) which adds these flags to the requests.
 
+
+## Demo
+If you want a quick demo, go [here](/apps/active-trace-ids/). This demo completely runs in the browser simulating a client server interaction and showing server side logs.
+
+A full implementation is available in [GitHub](https://github.com/mmpataki/active-trace-ids)
+
+
 ## Planned future work
 1. A github repo with filters for popular web servers like Tomcat
 2. Sample configuration for istio and other service meshes
