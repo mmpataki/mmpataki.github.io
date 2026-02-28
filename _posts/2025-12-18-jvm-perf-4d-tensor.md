@@ -38,7 +38,7 @@ For this series, we will keep the shape of the tensor to 4 dimensions (4 dimensi
 4. [CPU temperature, frequency and MSRs]({% post_url 2026-01-04-jvm-perf-4d-tensor-p4 %})
 5. [My superfast right ARM, the phone]({% post_url 2026-01-23-jvm-perf-4d-tensor-p5 %})
 6. [Memory (TLB)]({% post_url 2026-02-21-jvm-perf-4d-tensor-p6 %})
-
+7. [Java array layout and 60% perf. gain]({% post_url 2026-02-28-jvm-perf-4d-tensor-p7 %})
 
 ## Source code and results
 All code and results can be found in my Github - [mmpataki/tensor.benchmark](https://github.com/mmpataki/tensor.benchmark)

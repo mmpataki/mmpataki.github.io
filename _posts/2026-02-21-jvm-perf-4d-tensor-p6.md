@@ -24,7 +24,7 @@ There are different types of memory modules available (SRAM, DRAM) which vary in
 
 Accesses of memory are tried in this order - L1, L2, L3 and main memory. Every miss in the cache (L1, L2, L3) causes processor backend stalls and backend might be totally idle in those cycles (hyperthreads try solve this).
 
-Here are the number of cycles needed to access a word in my i7-9750 processor
+Here are the number of cycles needed to access a word in my i7-9750 processor (Coffeelake architecture)
 
 | Memory      | Cycles for read    |
 | ----------- | ------------------ |

@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cache Access Pattern Visualizer</title>
+    <meta name="description"
+        content="Visualize N-way set-associative cache access patterns with animated 4D index space, zoomable cache grid, and 2D array heatmap.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header class="app-header">
+        <h1>Cache Access Pattern Visualizer</h1>
+        <p class="subtitle">Simulate &amp; animate N-way set-associative cache behavior</p>
+    </header>
+
+    <main class="app-layout">
+        <!-- LEFT PANEL — Controls -->
+        <section class="panel panel-controls">
+            <h2 class="panel-title">Parameters</h2>
+
+            <div class="control-group">
+                <h3 class="group-label">Dimensions</h3>
+                <div class="input-grid dim-grid">
+                    <label>B_DIM <input type="number" id="dim-b" value="64" min="1"></label>
+                    <label>CH_DIM <input type="number" id="dim-ch" value="16" min="1"></label>
+                    <label>R_DIM <input type="number" id="dim-r" value="28" min="1"></label>
+                    <label>C_DIM <input type="number" id="dim-c" value="32" min="1"></label>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <h3 class="group-label">Cache Configuration</h3>
+                <div class="input-grid cache-grid-inputs">
+                    <label>Cache Size (bytes)
+                        <input type="number" id="cache-size" value="65536" min="1">
+                    </label>
+                    <label>Line Width (bytes)
+                        <input type="number" id="line-width" value="64" min="1">
+                    </label>
+                    <label>N-Way (associativity)
+                        <input type="number" id="n-way" value="4" min="1">
+                    </label>
+                    <label>Element Size (bytes)
+                        <input type="number" id="elem-size" value="4" min="1">
+                    </label>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <h3 class="group-label">Access Pattern (JS)</h3>
+                <textarea id="code-editor" spellcheck="false">// Available: B_DIM, CH_DIM, R_DIM, C_DIM, access(b, ch, r, c)
+for (let i = 0; i < 1_000_000; i++) {
+  let b  = i % B_DIM,
+      ch = i % CH_DIM,
+      r  = i % R_DIM,
+      c  = i % C_DIM;
+  access(b, ch, r, c);
+}</textarea>
+            </div>
+
+            <div class="control-group">
+                <h3 class="group-label">Visualization</h3>
+                <div class="speed-control">
+                    <span class="speed-label">Cell Size</span>
+                    <input type="range" id="cell-size-slider" min="1" max="20" value="4">
+                    <span id="cell-size-value" class="speed-val">4px</span>
+                </div>
+                <div class="speed-control">
+                    <span class="speed-label">Flash Persistence</span>
+                    <input type="range" id="flash-persistence-slider" min="50" max="99" value="85">
+                    <span id="flash-persistence-value" class="speed-val">85%</span>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <h3 class="group-label">Animation</h3>
+                <div class="speed-control">
+                    <span class="speed-label">Speed</span>
+                    <input type="range" id="speed-slider" min="1" max="2000" value="200">
+                    <span id="speed-value" class="speed-val">200/f</span>
+                </div>
+                <div class="anim-buttons">
+                    <button id="btn-run" class="btn btn-primary">▶ Run</button>
+                    <button id="btn-pause" class="btn">⏸ Pause</button>
+                    <button id="btn-step" class="btn">⏭ Step</button>
+                    <button id="btn-reset" class="btn btn-danger">↺ Reset</button>
+                </div>
+            </div>
+
+            <!-- Statistics -->
+            <div class="control-group">
+                <h3 class="group-label">Statistics</h3>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-value" id="stat-accesses">0</span>
+                        <span class="stat-label">Accesses</span>
+                    </div>
+                    <div class="stat-card stat-hit">
+                        <span class="stat-value" id="stat-hits">0</span>
+                        <span class="stat-label">Hits</span>
+                    </div>
+                    <div class="stat-card stat-miss">
+                        <span class="stat-value" id="stat-misses">0</span>
+                        <span class="stat-label">Misses</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-value" id="stat-hitrate">0%</span>
+                        <span class="stat-label">Hit Rate</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-value" id="stat-untouched">0</span>
+                        <span class="stat-label">Unique Bytes Touched</span>
+                    </div>
+                </div>
+                <div class="progress-container">
+                    <div class="progress-label">
+                        <span>Progress</span>
+                        <span id="progress-text">0 / 0</span>
+                    </div>
+                    <div class="progress-bar-bg">
+                        <div class="progress-bar-fill" id="progress-bar"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CENTER PANEL — Cache Canvas + Array Map -->
+        <section class="panel panel-center">
+            <!-- Cache Canvas -->
+            <div class="canvas-section">
+                <div class="canvas-header">
+                    <h2 class="panel-title">Cache <span id="cache-info" class="cache-info"></span></h2>
+                    <div class="zoom-controls">
+                        <button id="cache-zoom-in" class="btn btn-sm" title="Zoom In">+</button>
+                        <button id="cache-zoom-out" class="btn btn-sm" title="Zoom Out">−</button>
+                        <button id="cache-zoom-fit" class="btn btn-sm" title="Fit">Fit</button>
+                        <span id="cache-zoom-label" class="zoom-label">100%</span>
+                    </div>
+                </div>
+                <div class="canvas-wrapper" id="cache-canvas-wrapper">
+                    <canvas id="cache-canvas"></canvas>
+                </div>
+            </div>
+
+            <!-- Resize Handle -->
+            <div class="resize-handle" id="resize-handle">
+                <div class="resize-grip"></div>
+            </div>
+
+            <!-- Array Access Map -->
+            <div class="canvas-section" id="array-section">
+                <div class="canvas-header">
+                    <h2 class="panel-title">Array Access Map <span id="array-info" class="cache-info"></span></h2>
+                    <div class="zoom-controls">
+                        <select id="array-mode" class="btn btn-sm"
+                            style="background: var(--bg-tertiary); color: var(--text-primary); border: 1px solid var(--border); padding-right: 4px;">
+                            <option value="heatmap">Heatmap</option>
+                            <option value="touched">Bytes Touched</option>
+                        </select>
+                        <button id="array-zoom-in" class="btn btn-sm" title="Zoom In">+</button>
+                        <button id="array-zoom-out" class="btn btn-sm" title="Zoom Out">−</button>
+                        <button id="array-zoom-fit" class="btn btn-sm" title="Fit">Fit</button>
+                        <span id="array-zoom-label" class="zoom-label">100%</span>
+                    </div>
+                </div>
+                <div class="canvas-wrapper" id="array-canvas-wrapper">
+                    <canvas id="array-canvas"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <!-- RIGHT PANEL — 4D Index Viz -->
+        <section class="panel panel-viz">
+            <h2 class="panel-title">Index Space</h2>
+            <div id="index-viz" class="index-viz"></div>
+
+            <h2 class="panel-title" style="margin-top:16px">Legend</h2>
+            <div class="legend">
+                <div class="legend-item"><span class="legend-swatch legend-hit"></span> Cache Hit</div>
+                <div class="legend-item"><span class="legend-swatch legend-miss"></span> Cache Miss</div>
+                <div class="legend-item"><span class="legend-swatch legend-occupied"></span> Occupied Line</div>
+                <div class="legend-item"><span class="legend-swatch legend-empty"></span> Empty Slot</div>
+                <div class="legend-item"><span class="legend-swatch legend-hot"></span> Hot (array)</div>
+                <div class="legend-item"><span class="legend-swatch legend-cold"></span> Cold (array)</div>
+            </div>
+        </section>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
