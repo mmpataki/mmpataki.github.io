@@ -7,17 +7,21 @@ date: 2026-02-28 12:59:00 +05:30
 
 Hello! Welcome to part 7 of this series. In this episode we will continue to look at the memory latencies and improve the performance even further.
 
-<blockquote markdown="1" style="background: #E9F0E4; border-left: solid 3px #556948">
+> [!warm]   
+>
+> For those who landed here directly, this is the part 6 of the series - [Taking JVM on a performance ride (4D tensor)]({% post_url 2025-12-18-jvm-perf-4d-tensor %}). I suggest you to take a look at all the previous posts before reading this.
+>
+> **tl;dr**  
+> Multi-dimensional Java arrays introduce pointer indirection and scattered memory access. Flattening the data into a contiguous 1D structure improved spatial locality, reduced TLB pressure, and yielded ~60% performance improvement in a memory-bound benchmark.
 
-For those who landed here directly, this is the part 6 of the series - [Taking JVM on a performance ride (4D tensor)]({% post_url 2025-12-18-jvm-perf-4d-tensor %}). I suggest you to take a look at all the previous posts before reading this.
 
-**tl;dr**  
-Multi-dimensional Java arrays introduce pointer indirection and scattered memory access. Flattening the data into a contiguous 1D structure improved spatial locality, reduced TLB pressure, and yielded ~60% performance improvement in a memory-bound benchmark.
-</blockquote>
 
+
+<br><br>
 
 In the last [episode]({% post_url 2026-02-21-jvm-perf-4d-tensor-p6 %}) we tried to reduce the TLB misses by increasing the page size and the misses came down to ~2M. Can we do better? But before we dive in, I wanted to call out something.
 
+<div data-post-outline-placeholder></div>
 
 ## Error in our measurements
 
