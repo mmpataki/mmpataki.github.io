@@ -1,7 +1,7 @@
 ---
 tags: perf simpleperf arm benchmark android adb aarch64
 category: programming
-title: "Profiling JVM applications in Androind with simpleperf"
+title: "Profiling JVM applications in Android with simpleperf"
 date: 2026-01-26 01:30:00 +05:30
 ---
 
