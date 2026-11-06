@@ -48,6 +48,8 @@ const iconBtn = (cls, icon, title, onclick) =>
 
 const MIN_WAIT = 250, WAIT_STEP = 250;
 let savedWait = 1000; // remembered across mode switches
+const DELAYS = [0, 3, 5]; // start-delay choices, seconds
+let savedDelay = 0;    // remembered across mode switches
 
 /**
  * Creates a player for the given notes. An empty list means random notes forever.
@@ -59,6 +61,7 @@ function createPlayer(notes) {
     let idx = 0;          // index of the note currently shown
     let started = false;  // has the first note been shown?
     let timer = null;
+    let countdown = null; // interval id while counting down to start
     let noteStart = 0;    // timestamp when current note began
     let elapsedOnPause = 0;
     let repeat = false;
@@ -82,7 +85,7 @@ function createPlayer(notes) {
     const bar = el('div', { class: 'progress-bar' });
     const track = el('div', { class: 'progress-track' }, bar);
 
-    const playPause = iconBtn('small-btn', 'play', 'Play', () => (timer ? pause() : play()));
+    const playPause = iconBtn('small-btn', 'play', 'Play', () => (timer || countdown ? pause() : play()));
     const restartBtn = iconBtn('small-btn', 'restart', 'Restart', restart);
     const repeatBtn = iconBtn('small-btn off', 'repeat', 'Repeat', () => {
         repeat = !repeat;
@@ -97,15 +100,29 @@ function createPlayer(notes) {
             el('button', { class: 'small-time-btn', title: 'Slower', onclick: () => changeWait(+WAIT_STEP) }, '+'),
             el('button', { class: 'small-time-btn', title: 'Faster', onclick: () => changeWait(-WAIT_STEP) }, '−')));
 
+    const delayBtns = DELAYS.map(d => el('button', {
+        class: 'delay-btn', title: d ? `Start after ${d}s` : 'Start immediately',
+        onclick: () => { savedDelay = d; renderDelay(); },
+    }, d ? d + 's' : 'Off'));
+    const delaySel = el('div', { class: 'delayselector' },
+        el('div', { class: 'waittime' }, 'Start after'),
+        el('div', { class: 'delay-options' }, ...delayBtns));
+
+    const countEl = el('div', { class: 'note countdown' });
+    const countBox = el('div', { class: 'countdown-box' }, el('small', {}, 'get ready'), countEl);
+
     const controls = el('div', {},
-        el('div', { class: 'button-row' }, playPause, restartBtn, repeatBtn), timeSel);
+        el('div', { class: 'button-row' }, playPause, restartBtn, repeatBtn), timeSel, delaySel);
     const controlsHolder = el('div', { class: 'note-holder controls-holder' }, controls);
-    controlsHolder.style.visibility = 'hidden';
 
     const root = el('div', { class: 'player' }, stage, track, controlsHolder);
 
     function renderWait() { waitEl.textContent = savedWait + 'ms'; }
+    function renderDelay() {
+        delayBtns.forEach((b, i) => b.classList.toggle('active', DELAYS[i] === savedDelay));
+    }
     renderWait();
+    renderDelay();
 
     function show() {
         noteEl.textContent = noteAt(idx);
@@ -149,14 +166,32 @@ function createPlayer(notes) {
     }
 
     function play() {
-        if (timer) return;
+        if (timer || countdown) return;
+        if (savedDelay > 0) startCountdown(savedDelay); else begin();
+    }
+
+    // counts down `secs` seconds in the note area, then starts playing
+    function startCountdown(secs) {
+        let left = secs;
+        countEl.textContent = left;
+        stage.replaceChildren(countBox);
+        bar.style.width = '0';
+        setPlayIcon(true);
+        countdown = setInterval(() => {
+            if (--left > 0) { countEl.textContent = left; return; }
+            clearInterval(countdown);
+            countdown = null;
+            begin();
+        }, 1000);
+    }
+
+    function begin() {
+        stage.replaceChildren(noteRow);
         if (!started || finished) {
             if (finished) idx = 0;
             started = true;
             finished = false;
             elapsedOnPause = 0;
-            stage.replaceChildren(noteRow);
-            controlsHolder.style.visibility = 'visible';
             show();
         }
         noteStart = performance.now() - elapsedOnPause;
@@ -165,6 +200,15 @@ function createPlayer(notes) {
     }
 
     function pause() {
+        if (countdown) {
+            // cancel a pending start
+            clearInterval(countdown);
+            countdown = null;
+            stage.replaceChildren(started ? noteRow : bigPlay);
+            if (started) bar.style.width = (elapsedOnPause / savedWait * 100) + '%';
+            setPlayIcon(false);
+            return;
+        }
         if (!timer) return;
         clearInterval(timer);
         timer = null;
@@ -186,7 +230,10 @@ function createPlayer(notes) {
         renderWait();
     }
 
-    function destroy() { if (timer) clearInterval(timer); timer = null; }
+    function destroy() {
+        clearInterval(timer); clearInterval(countdown);
+        timer = countdown = null;
+    }
 
     return { root, destroy };
 }

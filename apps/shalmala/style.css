@@ -217,6 +217,44 @@ select {
     cursor: pointer;
 }
 
+.delayselector {
+    border-radius: 15px;
+    border: solid 3px black;
+    display: flex;
+    padding: 5px 10px;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.delay-options {
+    margin-left: 8px;
+    display: flex;
+    background: gold;
+    border-radius: 12px;
+    padding: 2px;
+}
+
+.delay-btn {
+    border: none;
+    background: none;
+    border-radius: 10px;
+    padding: 3px 9px;
+    font-weight: bold;
+    font-size: .85em;
+    cursor: pointer;
+    color: black;
+}
+
+.delay-btn.active { background: white; }
+
+.countdown-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.countdown { color: darkorange; }
+
 /* custom mode */
 .noteinput {
     resize: vertical;
